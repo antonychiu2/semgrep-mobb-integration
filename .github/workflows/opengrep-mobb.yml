@@ -1,10 +1,8 @@
-# Mobb/Snyk Fixer on pull requests
-# This workflow defines the needed steps to run Snyk Code on every pull request and pass the results to Mobb Fixer.
+# Mobb/Opengrep Fixer on pull requests
+# This workflow defines the needed steps to run Opengrep on every pull request and pass the results to Mobb Fixer.
 #
 # Secrets in use (add your missing ones):
-# SNYK_API_TOKEN - your Snyk user credentials (find how to get it here: https://docs.snyk.io/getting-started/how-to-obtain-and-authenticate-with-your-snyk-api-token)
-# MOBB_API_TOKEN - your mobb user credentials (autumatially set if you forked this repo via the Mobb app)
-# GITHUB_TOKEN - automatically set by GitHub
+# MOBB_API_TOKEN - your mobb user credentials (automatically set if you forked this repo via the Mobb app)
 
 name: "Mobb/Opengrep"
 
