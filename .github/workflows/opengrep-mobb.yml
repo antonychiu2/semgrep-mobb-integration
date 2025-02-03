@@ -44,10 +44,10 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           # Path to SARIF file relative to the root of the repository
-          sarif_file: results.sarif
+          sarif_file: opengrep_report.sarif
           # Optional category for the results
           # Used to differentiate multiple results for one commit
-          category: my-analysis-tool
+          category: my-opengrep-sast-tool
           
       # - name: Run Mobb on the findings and get fixes
       #   if: always()
