@@ -34,9 +34,9 @@ jobs:
           wget https://github.com/opengrep/opengrep/releases/download/v1.0.0-alpha.9/opengrep_manylinux_x86 -O opengrep
           chmod 755 opengrep
           ls -lah
-          export SEMGREP_BASELINE_REF=""
-          export OPENGREP_BASELINE_REF=""
-          ./opengrep ci --sarif --sarif-output opengrep_report.sarif --config auto
+          # export SEMGREP_BASELINE_REF=""
+          # export OPENGREP_BASELINE_REF=""
+          ./opengrep ci --sarif --sarif-output opengrep_report.sarif --config auto --baseline-commit ""
 
           jq -r '
             [.runs[].results[].ruleId] 
