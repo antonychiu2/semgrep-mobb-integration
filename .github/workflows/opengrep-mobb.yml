@@ -11,9 +11,6 @@ on:
     branches: ["*"]
   workflow_dispatch:
 
-permissions:
-  security-events: write  # Required for SARIF uploads
-
 jobs:
   scan-and-fix:
     name: Scan with Opengrep and fix with Mobb
@@ -22,7 +19,8 @@ jobs:
     permissions:
       pull-requests: write
       statuses: write
-
+      security-events: write
+      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
