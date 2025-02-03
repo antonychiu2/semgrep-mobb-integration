@@ -34,8 +34,8 @@ jobs:
           wget https://github.com/opengrep/opengrep/releases/download/v1.0.0-alpha.9/opengrep_manylinux_x86 -O opengrep
           chmod 755 opengrep
           ls -lah
-          # export SEMGREP_BASELINE_REF=
-          export OPENGREP_BASELINE_REF=
+          export SEMGREP_BASELINE_REF=
+          # export OPENGREP_BASELINE_REF=
           ./opengrep ci --sarif --sarif-output opengrep_report.sarif --config auto
 
           jq -r '
@@ -45,16 +45,8 @@ jobs:
             | .[] 
             | "\(.issue): \(.count) findings"
           ' opengrep_report.sarif
-
-
         shell: bash -l {0}
         
-      - name: Archive report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: sast-report
-          path: opengrep_report.sarif
 
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v3
