@@ -31,13 +31,6 @@ jobs:
           chmod +x opengrep
           ./opengrep ci --sarif --sarif-output opengrep_report.sarif --config auto
 
-          # jq -r '
-          #   [.runs[].results[].ruleId] 
-          #   | group_by(.) 
-          #   | map({issue: .[0], count: length}) 
-          #   | .[] 
-          #   | "\(.issue): \(.count) findings"
-          # ' opengrep_report.sarif
         shell: bash -l {0}
         
 
