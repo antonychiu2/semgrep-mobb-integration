@@ -63,11 +63,11 @@ jobs:
           # Used to differentiate multiple results for one commit
           category: my-opengrep-sast-tool
           
-      # - name: Run Mobb on the findings and get fixes
-      #   if: always()
-      #   uses: mobb-dev/action/review@v1.1
-      #   with:
-      #     report-file: "/home/runner/report.json"
-      #     api-key: ${{ secrets.MOBB_API_TOKEN }}
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     scanner: snyk
+      - name: Run Mobb on the findings and get fixes
+        if: always()
+        uses: mobb-dev/action/review@v1.1
+        with:
+          report-file: "opengrep_report.sarif"
+          api-key: ${{ secrets.MOBB_API_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          scanner: semgrep
