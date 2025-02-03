@@ -1,5 +1,5 @@
 # Mobb/Opengrep Fixer on pull requests
-# This workflow defines the needed steps to run Opengrep on every pull request and pass the results to Mobb Fixer.
+# This workflow defines the needed steps to run Opengrep manually (workflow_dispatch) and send the results to Mobb Fixer.
 #
 # Secrets in use (add your missing ones):
 # MOBB_API_TOKEN - your mobb user credentials (automatically set if you forked this repo via the Mobb app)
