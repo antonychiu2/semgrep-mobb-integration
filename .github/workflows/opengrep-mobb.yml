@@ -1,0 +1,59 @@
+# Mobb/Snyk Fixer on pull requests
+# This workflow defines the needed steps to run Snyk Code on every pull request and pass the results to Mobb Fixer.
+#
+# Secrets in use (add your missing ones):
+# SNYK_API_TOKEN - your Snyk user credentials (find how to get it here: https://docs.snyk.io/getting-started/how-to-obtain-and-authenticate-with-your-snyk-api-token)
+# MOBB_API_TOKEN - your mobb user credentials (autumatially set if you forked this repo via the Mobb app)
+# GITHUB_TOKEN - automatically set by GitHub
+
+name: "Mobb/Opengrep"
+
+on:
+  # pull_request:
+  #   branches: ["*"]
+  workflow_dispatch
+
+jobs:
+  scan-and-fix:
+    name: Scan with Opengrep and fix with Mobb
+    runs-on: 'ubuntu-latest'
+    timeout-minutes: 360
+    permissions:
+      pull-requests: write
+      statuses: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run Opengrep SAST scan
+        run:
+          pip install opengrep
+          opengrep ci --sarif --sarif-output opengrep_report.sarif --config auto
+
+        shell: bash -l {0}
+        
+      - name: Archive report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sast-report
+          path: opengrep_report.sarif
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          # Path to SARIF file relative to the root of the repository
+          sarif_file: results.sarif
+          # Optional category for the results
+          # Used to differentiate multiple results for one commit
+          category: my-analysis-tool
+          
+      # - name: Run Mobb on the findings and get fixes
+      #   if: always()
+      #   uses: mobb-dev/action/review@v1.1
+      #   with:
+      #     report-file: "/home/runner/report.json"
+      #     api-key: ${{ secrets.MOBB_API_TOKEN }}
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     scanner: snyk
