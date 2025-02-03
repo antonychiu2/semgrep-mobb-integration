@@ -4,12 +4,11 @@
 # Secrets in use (add your missing ones):
 # MOBB_API_TOKEN - your mobb user credentials (automatically set if you forked this repo via the Mobb app)
 
-name: "Mobb/Opengrep"
+name: "Mobb/Opengrep from PR"
 
 on:
   pull_request:
     branches: ["*"]
-  workflow_dispatch:
 
 jobs:
   scan-and-fix:
