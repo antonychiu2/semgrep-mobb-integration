@@ -28,8 +28,17 @@ jobs:
 
       - name: Run Opengrep SAST scan
         run: |
-          pip install opengrep
-          opengrep ci --sarif --sarif-output opengrep_report.sarif --config auto
+          wget https://github.com/opengrep/opengrep/releases/download/v1.0.0-alpha.9/opengrep_manylinux_x86 -O opengrep
+          ./opengrep ci --sarif --sarif-output opengrep_report.sarif --config auto
+
+          jq -r '
+            [.runs[].results[].ruleId] 
+            | group_by(.) 
+            | map({issue: .[0], count: length}) 
+            | .[] 
+            | "\(.issue): \(.count) findings"
+          ' opengrep_report.sarif
+
 
         shell: bash -l {0}
         
