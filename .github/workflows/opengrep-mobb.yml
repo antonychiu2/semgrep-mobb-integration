@@ -35,7 +35,7 @@ jobs:
           chmod 755 opengrep
           ls -lah
           # export SEMGREP_BASELINE_REF=
-          # export OPENGREP_BASELINE_REF=
+          export OPENGREP_BASELINE_REF=
           ./opengrep ci --sarif --sarif-output opengrep_report.sarif --config auto
 
           jq -r '
