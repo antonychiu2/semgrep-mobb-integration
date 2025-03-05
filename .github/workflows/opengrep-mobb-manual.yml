@@ -15,6 +15,7 @@ jobs:
     runs-on: 'ubuntu-latest'
     timeout-minutes: 360
     permissions:
+      contents: read
       pull-requests: write
       statuses: write
       security-events: write
@@ -41,7 +42,7 @@ jobs:
           
       - name: Run Mobb on the findings and get fixes
         if: always()
-        uses: mobb-dev/action@v1
+        uses: mobb-dev/action@v1.1
         with:
           report-file: "opengrep_report.sarif"
           api-key: ${{ secrets.MOBB_API_TOKEN }}
