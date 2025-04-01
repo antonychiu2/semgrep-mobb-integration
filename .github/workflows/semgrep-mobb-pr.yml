@@ -1,10 +1,10 @@
-# Mobb/Opengrep Fixer on pull requests
-# This workflow defines the needed steps to run Opengrep on every pull request and pass the results to Mobb Fixer.
+# Mobb/semgrep Fixer on pull requests
+# This workflow defines the needed steps to run semgrep on every pull request and pass the results to Mobb Fixer.
 #
 # Secrets in use (add your missing ones):
 # MOBB_API_TOKEN - your mobb user credentials (automatically set if you forked this repo via the Mobb app)
 
-name: "Mobb/Opengrep from PR"
+name: "Mobb/Semgrep from PR"
 
 on:
   pull_request:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   scan-and-fix:
-    name: Scan with Opengrep and fix with Mobb
+    name: Scan with Semgrep and fix with Mobb
     runs-on: 'ubuntu-latest'
     timeout-minutes: 360
     permissions:
@@ -25,13 +25,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Run Opengrep SAST scan
+      - name: Install Semgrep CLI
         run: |
-          wget https://github.com/opengrep/opengrep/releases/download/v1.0.0-alpha.9/opengrep_manylinux_x86 -O opengrep
-          chmod +x opengrep
-          ./opengrep ci --sarif --sarif-output opengrep_report.sarif --config auto --suppress-errors
+          pip install semgrep
 
-        shell: bash -l {0}
+      - name: Authenticate Semgrep CLI
+        env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+        run: |
+          semgrep login
+
+      - name: Run Semgrep SAST scan
+        run: |
+          semgrep ci --config auto --sarif --output semgrep_report.sarif || true
         
 
       - name: Upload SARIF file
@@ -39,13 +45,13 @@ jobs:
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: opengrep_report.sarif
-          category: my-opengrep-sast-tool
+          category: semgrep-scan-result
           
       - name: Run Mobb on the findings and get fixes
         if: always()
         uses: mobb-dev/action/review@v1.1
         with:
-          report-file: "opengrep_report.sarif"
+          report-file: "semgrep_report.sarif"
           api-key: ${{ secrets.MOBB_API_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           scanner: semgrep
