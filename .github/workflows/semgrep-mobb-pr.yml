@@ -37,14 +37,14 @@ jobs:
 
       - name: Run Semgrep SAST scan
         run: |
-          semgrep ci --sarif --output semgrep_report.sarif || true
-        
+          semgrep ci --sarif --output semgrep_report.sarif
+          ls -l
 
       - name: Upload SARIF file
         if: always()
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: opengrep_report.sarif
+          sarif_file: semgrep_report.sarif
           category: semgrep-scan-result
           
       - name: Run Mobb on the findings and get fixes
