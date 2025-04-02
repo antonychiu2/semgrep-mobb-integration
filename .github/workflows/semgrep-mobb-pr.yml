@@ -25,28 +25,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Semgrep CLI
+      - name: Install and Run Semgrep CLI
         run: |
           pip install semgrep
-
-      - name: Authenticate Semgrep CLI
-        env:
-          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
-        run: |
           semgrep login
-
-      - name: Run Semgrep SAST scan
-        run: |
           semgrep ci --sarif --output semgrep_report.sarif
-          ls -l
-
-      - name: Upload SARIF file
-        if: always()
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: semgrep_report.sarif
-          category: semgrep-scan-result
-          
+       env:
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+     
       - name: Run Mobb on the findings and get fixes
         if: always()
         uses: mobb-dev/action/review@v1.1
