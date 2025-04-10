@@ -3,7 +3,7 @@ import sys
 
 def delete_user_folder(name):
     """Simulates deleting a user's folder — vulnerable to injection"""
-    delete_cmd = f"rm -rf /home/{name}"
+    delete_cmd = ['rm', '-rf', f'/home/{name}']
     subprocess.run(delete_cmd, shell=True)
 
 def create_user_file_safe(name):
