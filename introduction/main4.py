@@ -2,7 +2,7 @@ import subprocess
 import sys
 
 def delete_user_folder(name):
-    delete_cmd = f"rm -rf /home/{name}"
+    delete_cmd = ['rm', '-rf', f'/home/{name}']
     subprocess.run(delete_cmd, shell=True)
 
 def encode_video(mode):
