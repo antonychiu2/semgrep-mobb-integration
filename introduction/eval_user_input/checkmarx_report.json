@@ -1,0 +1,480 @@
+{
+  "results": [
+    {
+      "type": "sast",
+      "label": "sast",
+      "id": "+cPSaieXEMdp5dNTXs2P+xlgIdk=",
+      "similarityId": "1217677774",
+      "status": "NEW",
+      "state": "TO_VERIFY",
+      "severity": "CRITICAL",
+      "created": "2025-08-20T12:21:17Z",
+      "firstFoundAt": "2025-08-20T12:21:17Z",
+      "foundAt": "2025-08-20T12:21:17Z",
+      "firstScanId": "6515a538-e4d8-40cf-bc4a-bf4bbbb11fa0",
+      "description": "The application&#39;s\u00a0execute_code method receives and\u00a0dynamically executes user-controlled code using\u00a0eval,\u00a0at line 12 of /main.py. This could enable an attacker to inject and run arbitrary code.\n\nThe attacker can inject the executed code via user input,\u00a0form, which is retrieved by the application in the execute_code method, at line 11 of /main.py.\n\n",
+      "descriptionHTML": "<p>The application&lsquo;s\u00a0execute_code method receives and\u00a0dynamically executes user-controlled code using\u00a0eval,\u00a0at line 12 of /main.py. This could enable an attacker to inject and run arbitrary code.</p>\n\n<p>The attacker can inject the executed code via user input,\u00a0form, which is retrieved by the application in the execute_code method, at line 11 of /main.py.</p>\n",
+      "data": {
+        "queryId": 13646819717326216658,
+        "queryName": "Code_Injection",
+        "group": "Python_Critical_Risk",
+        "resultHash": "+cPSaieXEMdp5dNTXs2P+xlgIdk=",
+        "languageName": "Python",
+        "nodes": [
+          {
+            "id": "uRzca8oJ12gG0UipzqeUD2aGgcQ=",
+            "line": 11,
+            "name": "form",
+            "column": 25,
+            "length": 4,
+            "method": "execute_code",
+            "nodeID": 42,
+            "domType": "MemberAccess",
+            "fileName": "/main.py",
+            "fullName": "request.form",
+            "typeName": "form",
+            "methodLine": 9,
+            "definitions": "0"
+          },
+          {
+            "id": "+i1wTt2BewhQJ463encI0KEHL3E=",
+            "line": 11,
+            "name": "get",
+            "column": 30,
+            "length": 3,
+            "method": "execute_code",
+            "nodeID": 45,
+            "domType": "MethodInvokeExpr",
+            "fileName": "/main.py",
+            "fullName": "request.form.get",
+            "typeName": "get",
+            "methodLine": 9,
+            "definitions": "0"
+          },
+          {
+            "id": "Qz4erC9oCRQUJjpbL9CfsmsTZxY=",
+            "line": 11,
+            "name": "user_code",
+            "column": 5,
+            "length": 9,
+            "method": "execute_code",
+            "nodeID": 50,
+            "domType": "UnknownReference",
+            "fileName": "/main.py",
+            "fullName": "CxPYNS_57cb6cdb.execute_code.user_code",
+            "typeName": "object",
+            "methodLine": 9,
+            "definitions": "1"
+          },
+          {
+            "id": "2FDJUi4Nqzd+Kdstomzia2Ac4aw=",
+            "line": 12,
+            "name": "user_code",
+            "column": 10,
+            "length": 9,
+            "method": "execute_code",
+            "nodeID": 58,
+            "domType": "UnknownReference",
+            "fileName": "/main.py",
+            "fullName": "CxPYNS_57cb6cdb.execute_code.user_code",
+            "typeName": "object",
+            "methodLine": 9,
+            "definitions": "1"
+          },
+          {
+            "id": "HoBoNxedqjDrOO58RQlGS1W/61s=",
+            "line": 12,
+            "name": "eval",
+            "column": 5,
+            "length": 4,
+            "method": "execute_code",
+            "nodeID": 54,
+            "domType": "MethodInvokeExpr",
+            "fileName": "/main.py",
+            "fullName": "eval",
+            "typeName": "eval",
+            "methodLine": 9,
+            "definitions": "0"
+          }
+        ]
+      },
+      "comments": {},
+      "vulnerabilityDetails": {
+        "cweId": 94,
+        "cvss": {},
+        "compliances": [
+          "FISMA 2014",
+          "NIST SP 800-53",
+          "ASA Premium",
+          "CWE top 25",
+          "OWASP Top 10 2013",
+          "OWASP Top 10 2021",
+          "PCI DSS v3.2.1",
+          "PCI DSS v4.0",
+          "OWASP ASVS",
+          "SANS top 25",
+          "Top Tier",
+          "ASD STIG 6.1",
+          "MOIS(KISA) Secure Coding 2021"
+        ]
+      }
+    },
+    {
+      "type": "sast",
+      "label": "sast",
+      "id": "W9jD+hnTBYnhSoSjVa9l9RvBblg=",
+      "similarityId": "883886615",
+      "status": "NEW",
+      "state": "TO_VERIFY",
+      "severity": "CRITICAL",
+      "created": "2025-08-20T12:21:17Z",
+      "firstFoundAt": "2025-08-20T12:21:17Z",
+      "foundAt": "2025-08-20T12:21:17Z",
+      "firstScanId": "6515a538-e4d8-40cf-bc4a-bf4bbbb11fa0",
+      "description": "The application&#39;s\u00a0calculate method receives and\u00a0dynamically executes user-controlled code using\u00a0eval,\u00a0at line 20 of /main.py. This could enable an attacker to inject and run arbitrary code.\n\nThe attacker can inject the executed code via user input,\u00a0get, which is retrieved by the application in the calculate method, at line 19 of /main.py.\n\n",
+      "descriptionHTML": "<p>The application&lsquo;s\u00a0calculate method receives and\u00a0dynamically executes user-controlled code using\u00a0eval,\u00a0at line 20 of /main.py. This could enable an attacker to inject and run arbitrary code.</p>\n\n<p>The attacker can inject the executed code via user input,\u00a0get, which is retrieved by the application in the calculate method, at line 19 of /main.py.</p>\n",
+      "data": {
+        "queryId": 13646819717326216658,
+        "queryName": "Code_Injection",
+        "group": "Python_Critical_Risk",
+        "resultHash": "W9jD+hnTBYnhSoSjVa9l9RvBblg=",
+        "languageName": "Python",
+        "nodes": [
+          {
+            "id": "t+W8KvKV26kWEfOJmafbOk0OuRI=",
+            "line": 19,
+            "name": "get",
+            "column": 31,
+            "length": 3,
+            "method": "calculate",
+            "nodeID": 103,
+            "domType": "MethodInvokeExpr",
+            "fileName": "/main.py",
+            "fullName": "request.args.get",
+            "typeName": "get",
+            "methodLine": 17,
+            "definitions": "0"
+          },
+          {
+            "id": "tC14GscBdypyUkK6gNmyDN/OPvg=",
+            "line": 19,
+            "name": "expression",
+            "column": 5,
+            "length": 10,
+            "method": "calculate",
+            "nodeID": 110,
+            "domType": "UnknownReference",
+            "fileName": "/main.py",
+            "fullName": "CxPYNS_57cb6cdb.calculate.expression",
+            "typeName": "object",
+            "methodLine": 17,
+            "definitions": "1"
+          },
+          {
+            "id": "MfVQrQALQRFERH1kj6VH9y7P7oM=",
+            "line": 20,
+            "name": "expression",
+            "column": 22,
+            "length": 10,
+            "method": "calculate",
+            "nodeID": 120,
+            "domType": "UnknownReference",
+            "fileName": "/main.py",
+            "fullName": "CxPYNS_57cb6cdb.calculate.expression",
+            "typeName": "object",
+            "methodLine": 17,
+            "definitions": "1"
+          },
+          {
+            "id": "yCevXe0sjtXGqsnlqmRN0tgSoLs=",
+            "line": 20,
+            "name": "eval",
+            "column": 5,
+            "length": 4,
+            "method": "calculate",
+            "nodeID": 114,
+            "domType": "MethodInvokeExpr",
+            "fileName": "/main.py",
+            "fullName": "eval",
+            "typeName": "eval",
+            "methodLine": 17,
+            "definitions": "0"
+          }
+        ]
+      },
+      "comments": {},
+      "vulnerabilityDetails": {
+        "cweId": 94,
+        "cvss": {},
+        "compliances": [
+          "FISMA 2014",
+          "NIST SP 800-53",
+          "ASA Premium",
+          "CWE top 25",
+          "OWASP Top 10 2013",
+          "OWASP Top 10 2021",
+          "PCI DSS v3.2.1",
+          "PCI DSS v4.0",
+          "OWASP ASVS",
+          "SANS top 25",
+          "Top Tier",
+          "ASD STIG 6.1",
+          "MOIS(KISA) Secure Coding 2021"
+        ]
+      }
+    },
+    {
+      "type": "sast",
+      "label": "sast",
+      "id": "eg7OsHMyeYEE2eUDUF6zCkHpWM0=",
+      "similarityId": "-836580170",
+      "status": "RECURRENT",
+      "state": "TO_VERIFY",
+      "severity": "HIGH",
+      "created": "2025-08-20T12:21:17Z",
+      "firstFoundAt": "2025-07-16T11:40:35Z",
+      "foundAt": "2025-08-20T12:21:17Z",
+      "firstScanId": "b78b7a9a-b772-4c39-8981-a9cd2b261183",
+      "description": "The application source code includes true, in line 37 of /main.py, which was left from development and debugging, and is not part of the intended application functionality.",
+      "descriptionHTML": "<p>The application source code includes true, in line 37 of /main.py, which was left from development and debugging, and is not part of the intended application functionality.</p>\n",
+      "data": {
+        "queryId": 15910406614565918143,
+        "queryName": "Debug_Enabled",
+        "group": "Python_High_Risk",
+        "resultHash": "eg7OsHMyeYEE2eUDUF6zCkHpWM0=",
+        "languageName": "Python",
+        "nodes": [
+          {
+            "id": "zEDzhPNURJ4WSxIesEcOFDDfoMg=",
+            "line": 37,
+            "name": "true",
+            "column": 19,
+            "length": 4,
+            "nodeID": 254,
+            "domType": "Param",
+            "fileName": "/main.py",
+            "fullName": "true",
+            "methodLine": 37,
+            "definitions": "-1"
+          }
+        ]
+      },
+      "comments": {},
+      "vulnerabilityDetails": {
+        "cweId": 489,
+        "cvss": {},
+        "compliances": [
+          "MOIS(KISA) Secure Coding 2021",
+          "NIST SP 800-53",
+          "OWASP Top 10 2017",
+          "PCI DSS v4.0",
+          "ASA Premium",
+          "FISMA 2014"
+        ]
+      }
+    },
+    {
+      "type": "sast",
+      "label": "sast",
+      "id": "f/iwxwhRLt8Mk9SQAkPLCq+hKk4=",
+      "similarityId": "-1940128367",
+      "status": "RECURRENT",
+      "state": "TO_VERIFY",
+      "severity": "MEDIUM",
+      "created": "2025-08-20T12:21:17Z",
+      "firstFoundAt": "2024-06-18T15:41:34Z",
+      "foundAt": "2025-08-20T12:21:17Z",
+      "firstScanId": "08b0ff7e-13fc-48e9-98e8-2f06d659f33c",
+      "description": "The web-application does not define an HSTS header, leaving it vulnerable to attack.\n\n",
+      "descriptionHTML": "<p>The web-application does not define an HSTS header, leaving it vulnerable to attack.</p>\n",
+      "data": {
+        "queryId": 7929843929890808532,
+        "queryName": "Missing_HSTS_Header",
+        "group": "Python_Medium_Threat",
+        "resultHash": "f/iwxwhRLt8Mk9SQAkPLCq+hKk4=",
+        "languageName": "Python",
+        "nodes": [
+          {
+            "id": "I5O7vcIUq1yw0cwFb0PDFa/Z0Gw=",
+            "line": 6,
+            "name": "app",
+            "column": 1,
+            "length": 3,
+            "nodeID": 245,
+            "domType": "UnknownReference",
+            "fileName": "/main.py",
+            "fullName": "CxPYNS_57cb6cdb.app",
+            "typeName": "object",
+            "methodLine": 6,
+            "definitions": "1"
+          }
+        ]
+      },
+      "comments": {},
+      "vulnerabilityDetails": {
+        "cweId": 346,
+        "cvss": {},
+        "compliances": [
+          "OWASP Top 10 API 2023",
+          "PCI DSS v4.0",
+          "ASA Premium",
+          "OWASP ASVS",
+          "OWASP Top 10 2021"
+        ]
+      }
+    },
+    {
+      "type": "sast",
+      "label": "sast",
+      "id": "UeH8Uh872aAWCVxljA+yCLoRWpk=",
+      "similarityId": "-134467373",
+      "status": "RECURRENT",
+      "state": "TO_VERIFY",
+      "severity": "MEDIUM",
+      "created": "2025-08-20T12:21:17Z",
+      "firstFoundAt": "2025-07-16T11:40:35Z",
+      "foundAt": "2025-08-20T12:21:17Z",
+      "firstScanId": "b78b7a9a-b772-4c39-8981-a9cd2b261183",
+      "description": "Method calculate at line 17 of /main.py gets a parameter from a user request from calculate. This parameter value flows through the code and is eventually used to access application state altering functionality. This may enable Cross-Site Request Forgery (CSRF).\n\n",
+      "descriptionHTML": "<p>Method calculate at line 17 of /main.py gets a parameter from a user request from calculate. This parameter value flows through the code and is eventually used to access application state altering functionality. This may enable Cross-Site Request Forgery (CSRF).</p>\n",
+      "data": {
+        "queryId": 8400805859752228222,
+        "queryName": "CSRF",
+        "group": "Python_Medium_Threat",
+        "resultHash": "UeH8Uh872aAWCVxljA+yCLoRWpk=",
+        "languageName": "Python",
+        "nodes": [
+          {
+            "id": "F/+/o/h2V3LgWHLXXvIAb9Kpyb0=",
+            "line": 17,
+            "name": "calculate",
+            "column": 5,
+            "length": 9,
+            "method": "calculate",
+            "nodeID": 82,
+            "domType": "MethodDecl",
+            "fileName": "/main.py",
+            "fullName": "CxPYNS_57cb6cdb.calculate",
+            "methodLine": 17,
+            "definitions": "1"
+          }
+        ]
+      },
+      "comments": {},
+      "vulnerabilityDetails": {
+        "cweId": 352,
+        "cvss": {},
+        "compliances": [
+          "OWASP Top 10 2013",
+          "ASA Premium",
+          "PCI DSS v3.2.1",
+          "SANS top 25",
+          "CWE top 25",
+          "MOIS(KISA) Secure Coding 2021",
+          "NIST SP 800-53",
+          "OWASP ASVS",
+          "PCI DSS v4.0",
+          "ASD STIG 6.1",
+          "OWASP Top 10 2021"
+        ]
+      }
+    },
+    {
+      "type": "sast",
+      "label": "sast",
+      "id": "J23gnU4RU8eHei/1lgHu2XPCvCQ=",
+      "similarityId": "1146746163",
+      "status": "RECURRENT",
+      "state": "TO_VERIFY",
+      "severity": "LOW",
+      "created": "2025-08-20T12:21:17Z",
+      "firstFoundAt": "2024-06-18T15:41:34Z",
+      "foundAt": "2025-08-20T12:21:17Z",
+      "firstScanId": "08b0ff7e-13fc-48e9-98e8-2f06d659f33c",
+      "description": "A Content Security Policy is not explicitly defined within the web-application.",
+      "descriptionHTML": "<p>A Content Security Policy is not explicitly defined within the web-application.</p>\n",
+      "data": {
+        "queryId": 8455083761984522303,
+        "queryName": "Missing_Content_Security_Policy",
+        "group": "Python_Low_Visibility",
+        "resultHash": "J23gnU4RU8eHei/1lgHu2XPCvCQ=",
+        "languageName": "Python",
+        "nodes": [
+          {
+            "id": "I5O7vcIUq1yw0cwFb0PDFa/Z0Gw=",
+            "line": 6,
+            "name": "app",
+            "column": 1,
+            "length": 3,
+            "nodeID": 245,
+            "domType": "UnknownReference",
+            "fileName": "/main.py",
+            "fullName": "CxPYNS_57cb6cdb.app",
+            "typeName": "object",
+            "methodLine": 6,
+            "definitions": "1"
+          }
+        ]
+      },
+      "comments": {},
+      "vulnerabilityDetails": {
+        "cweId": 346,
+        "cvss": {},
+        "compliances": [
+          "OWASP ASVS",
+          "OWASP Top 10 2021",
+          "PCI DSS v4.0"
+        ]
+      }
+    },
+    {
+      "type": "sast",
+      "label": "sast",
+      "id": "QZmngXd8BE7DnVonk5XcBfY/9xg=",
+      "similarityId": "-1168125011",
+      "status": "RECURRENT",
+      "state": "TO_VERIFY",
+      "severity": "LOW",
+      "created": "2025-08-20T12:21:17Z",
+      "firstFoundAt": "2025-07-16T11:40:35Z",
+      "foundAt": "2025-08-20T12:21:17Z",
+      "firstScanId": "b78b7a9a-b772-4c39-8981-a9cd2b261183",
+      "description": "A Content Security Policy is not explicitly defined within the web-application.",
+      "descriptionHTML": "<p>A Content Security Policy is not explicitly defined within the web-application.</p>\n",
+      "data": {
+        "queryId": 8455083761984522303,
+        "queryName": "Missing_Content_Security_Policy",
+        "group": "Python_Low_Visibility",
+        "resultHash": "QZmngXd8BE7DnVonk5XcBfY/9xg=",
+        "languageName": "Python",
+        "nodes": [
+          {
+            "id": "j7vC2iIpO96a/A9kKugRVvv+lFw=",
+            "line": 13,
+            "name": "ReturnStmt",
+            "column": 5,
+            "length": 6,
+            "method": "execute_code",
+            "nodeID": 59,
+            "domType": "ReturnStmt",
+            "fileName": "/main.py",
+            "methodLine": 9,
+            "definitions": "-1"
+          }
+        ]
+      },
+      "comments": {},
+      "vulnerabilityDetails": {
+        "cweId": 346,
+        "cvss": {},
+        "compliances": [
+          "OWASP ASVS",
+          "OWASP Top 10 2021",
+          "PCI DSS v4.0"
+        ]
+      }
+    }
+  ],
+  "totalCount": 7,
+  "scanID": "6515a538-e4d8-40cf-bc4a-bf4bbbb11fa0"
+}
