@@ -1,0 +1,541 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "toolExecutionNotifications": [
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule elixir.lang.best-practice.deprecated-bnot-operator.deprecated_bnot_operator:\n Missing Semgrep extension needed for parsing Elixir target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule elixir.lang.best-practice.deprecated-bxor-operator.deprecated_bxor_operator:\n Missing Semgrep extension needed for parsing Elixir target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule apex.lang.security.ncino.system.systemdebug.system-debug:\n Missing Semgrep extension needed for parsing Apex target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule apex.lang.best-practice.ncino.accessmodifiers.globalaccessmodifiers.global-access-modifiers:\n Missing Semgrep extension needed for parsing Apex target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule apex.lang.best-practice.ncino.urls.absoluteurls.absolute-urls:\n Missing Semgrep extension needed for parsing Apex target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule apex.lang.security.ncino.dml.apexcsrfconstructor.apex-csrf-constructor:\n Missing Semgrep extension needed for parsing Apex target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule apex.lang.security.ncino.dml.dmlnativestatements.dml-native-statements:\n Missing Semgrep extension needed for parsing Apex target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule apex.lang.security.ncino.encryption.badcrypto.bad-crypto:\n Missing Semgrep extension needed for parsing Apex target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule apex.lang.security.ncino.endpoints.insecurehttprequest.insecure-http-request:\n Missing Semgrep extension needed for parsing Apex target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule apex.lang.security.ncino.endpoints.namedcredentialsconstantmatch.named-credentials-constant-match:\n Missing Semgrep extension needed for parsing Apex target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule apex.lang.security.ncino.endpoints.namedcredentialsstringmatch.named-credentials-string-match:\n Missing Semgrep extension needed for parsing Apex target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule apex.lang.security.ncino.injection.apexsoqlinjectionfromunescapedurlparam.soql-injection-unescaped-url-param:\n Missing Semgrep extension needed for parsing Apex target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule apex.lang.security.ncino.injection.apexsoqlinjectionunescapedparam.soql-injection-unescaped-param:\n Missing Semgrep extension needed for parsing Apex target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule apex.lang.security.ncino.sharing.specifysharinglevel.specify-sharing-level:\n Missing Semgrep extension needed for parsing Apex target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule elixir.lang.best-practice.deprecated-calendar-iso-day-of-week-3.deprecated_calendar_iso_day_of_week_3:\n Missing Semgrep extension needed for parsing Elixir target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule elixir.lang.best-practice.deprecated-use-bitwise.deprecated_use_bitwise:\n Missing Semgrep extension needed for parsing Elixir target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule elixir.lang.best-practice.enum-map-into.enum_map_into:\n Missing Semgrep extension needed for parsing Elixir target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule elixir.lang.best-practice.enum-map-join.enum_map_join:\n Missing Semgrep extension needed for parsing Elixir target. Try adding `--pro-languages` to your command."
+              }
+            },
+            {
+              "descriptor": {
+                "id": "Missing plugin"
+              },
+              "level": "note",
+              "message": {
+                "text": "Missing plugin for rule elixir.lang.correctness.atom-exhaustion.atom_exhaustion:\n Missing Semgrep extension needed for parsing Elixir target. Try adding `--pro-languages` to your command."
+              }
+            }
+          ]
+        }
+      ],
+      "results": [
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 34,
+                  "endLine": 8,
+                  "snippet": {
+                    "text": "    eval(f\"{var_name} = {value}\")"
+                  },
+                  "startColumn": 5,
+                  "startLine": 8
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "The application was found calling the `eval` function with non-literal data. If the variable contains \nuser-controlled data, either partially or fully, an adversary could compromise the entire system by \nexecuting arbitrary Python code.\n\nTo remediate this issue, remove all calls to `eval` and consider alternative methods for executing \nthe necessary business logic. There is almost no safe method of calling `eval` with user-supplied input.\n\nIf the application only needs to convert strings into objects, consider using `json.loads`. In \nsome cases `ast.literal_eval` is recommended, but this should be avoided as it can still suffer \nfrom other issues such as the ability for malicious code to crash the python interpreter or application.\n\nExample using `json.loads`` to load in arbitrary data to create data structures:\n```\n# User supplied data as a blob of JSON\nuser_supplied_data = \"\"\"{\"user\": \"test\", \"metadata\": [1,2,3]}\"\"\"\n# Load the JSON\nuser_object = json.loads(user_supplied_data)\n# Manually add protected properties _after_ loading, never before\nuser_object[\"is_admin\"] = False\n# Work with the object\n```\n"
+          },
+          "properties": {},
+          "ruleId": "gitlab.bandit.B307"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 34,
+                  "endLine": 8,
+                  "snippet": {
+                    "text": "    eval(f\"{var_name} = {value}\")"
+                  },
+                  "startColumn": 5,
+                  "startLine": 8
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.eval-detected.eval-detected"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 5,
+                  "endLine": 16,
+                  "snippet": {
+                    "text": "    eval(f\"\"\"\ndef {func_name}():\n    {func_body}\n\"\"\")"
+                  },
+                  "startColumn": 5,
+                  "startLine": 13
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "The application was found calling the `eval` function with non-literal data. If the variable contains \nuser-controlled data, either partially or fully, an adversary could compromise the entire system by \nexecuting arbitrary Python code.\n\nTo remediate this issue, remove all calls to `eval` and consider alternative methods for executing \nthe necessary business logic. There is almost no safe method of calling `eval` with user-supplied input.\n\nIf the application only needs to convert strings into objects, consider using `json.loads`. In \nsome cases `ast.literal_eval` is recommended, but this should be avoided as it can still suffer \nfrom other issues such as the ability for malicious code to crash the python interpreter or application.\n\nExample using `json.loads`` to load in arbitrary data to create data structures:\n```\n# User supplied data as a blob of JSON\nuser_supplied_data = \"\"\"{\"user\": \"test\", \"metadata\": [1,2,3]}\"\"\"\n# Load the JSON\nuser_object = json.loads(user_supplied_data)\n# Manually add protected properties _after_ loading, never before\nuser_object[\"is_admin\"] = False\n# Work with the object\n```\n"
+          },
+          "properties": {},
+          "ruleId": "gitlab.bandit.B307"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 5,
+                  "endLine": 16,
+                  "snippet": {
+                    "text": "    eval(f\"\"\"\ndef {func_name}():\n    {func_body}\n\"\"\")"
+                  },
+                  "startColumn": 5,
+                  "startLine": 13
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.eval-detected.eval-detected"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 64,
+                  "endLine": 21,
+                  "snippet": {
+                    "text": "    eval(\"result = %s %s %s\" % (operand1, operation, operand2))"
+                  },
+                  "startColumn": 5,
+                  "startLine": 21
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "The application was found calling the `eval` function with non-literal data. If the variable contains \nuser-controlled data, either partially or fully, an adversary could compromise the entire system by \nexecuting arbitrary Python code.\n\nTo remediate this issue, remove all calls to `eval` and consider alternative methods for executing \nthe necessary business logic. There is almost no safe method of calling `eval` with user-supplied input.\n\nIf the application only needs to convert strings into objects, consider using `json.loads`. In \nsome cases `ast.literal_eval` is recommended, but this should be avoided as it can still suffer \nfrom other issues such as the ability for malicious code to crash the python interpreter or application.\n\nExample using `json.loads`` to load in arbitrary data to create data structures:\n```\n# User supplied data as a blob of JSON\nuser_supplied_data = \"\"\"{\"user\": \"test\", \"metadata\": [1,2,3]}\"\"\"\n# Load the JSON\nuser_object = json.loads(user_supplied_data)\n# Manually add protected properties _after_ loading, never before\nuser_object[\"is_admin\"] = False\n# Work with the object\n```\n"
+          },
+          "properties": {},
+          "ruleId": "gitlab.bandit.B307"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 64,
+                  "endLine": 21,
+                  "snippet": {
+                    "text": "    eval(\"result = %s %s %s\" % (operand1, operation, operand2))"
+                  },
+                  "startColumn": 5,
+                  "startLine": 21
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.eval-detected.eval-detected"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 42,
+                  "endLine": 28,
+                  "snippet": {
+                    "text": "    eval(code_template.format(attr_name))"
+                  },
+                  "startColumn": 5,
+                  "startLine": 28
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "The application was found calling the `eval` function with non-literal data. If the variable contains \nuser-controlled data, either partially or fully, an adversary could compromise the entire system by \nexecuting arbitrary Python code.\n\nTo remediate this issue, remove all calls to `eval` and consider alternative methods for executing \nthe necessary business logic. There is almost no safe method of calling `eval` with user-supplied input.\n\nIf the application only needs to convert strings into objects, consider using `json.loads`. In \nsome cases `ast.literal_eval` is recommended, but this should be avoided as it can still suffer \nfrom other issues such as the ability for malicious code to crash the python interpreter or application.\n\nExample using `json.loads`` to load in arbitrary data to create data structures:\n```\n# User supplied data as a blob of JSON\nuser_supplied_data = \"\"\"{\"user\": \"test\", \"metadata\": [1,2,3]}\"\"\"\n# Load the JSON\nuser_object = json.loads(user_supplied_data)\n# Manually add protected properties _after_ loading, never before\nuser_object[\"is_admin\"] = False\n# Work with the object\n```\n"
+          },
+          "properties": {},
+          "ruleId": "gitlab.bandit.B307"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 42,
+                  "endLine": 28,
+                  "snippet": {
+                    "text": "    eval(code_template.format(attr_name))"
+                  },
+                  "startColumn": 5,
+                  "startLine": 28
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.eval-detected.eval-detected"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 26,
+                  "endLine": 34,
+                  "snippet": {
+                    "text": "    eval(filled_template)"
+                  },
+                  "startColumn": 5,
+                  "startLine": 34
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "The application was found calling the `eval` function with non-literal data. If the variable contains \nuser-controlled data, either partially or fully, an adversary could compromise the entire system by \nexecuting arbitrary Python code.\n\nTo remediate this issue, remove all calls to `eval` and consider alternative methods for executing \nthe necessary business logic. There is almost no safe method of calling `eval` with user-supplied input.\n\nIf the application only needs to convert strings into objects, consider using `json.loads`. In \nsome cases `ast.literal_eval` is recommended, but this should be avoided as it can still suffer \nfrom other issues such as the ability for malicious code to crash the python interpreter or application.\n\nExample using `json.loads`` to load in arbitrary data to create data structures:\n```\n# User supplied data as a blob of JSON\nuser_supplied_data = \"\"\"{\"user\": \"test\", \"metadata\": [1,2,3]}\"\"\"\n# Load the JSON\nuser_object = json.loads(user_supplied_data)\n# Manually add protected properties _after_ loading, never before\nuser_object[\"is_admin\"] = False\n# Work with the object\n```\n"
+          },
+          "properties": {},
+          "ruleId": "gitlab.bandit.B307"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 26,
+                  "endLine": 34,
+                  "snippet": {
+                    "text": "    eval(filled_template)"
+                  },
+                  "startColumn": 5,
+                  "startLine": 34
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.eval-detected.eval-detected"
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "Semgrep OSS",
+          "rules": [
+            {
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "fullDescription": {
+                "text": "The application was found calling the `eval` function with non-literal data. If the variable contains \nuser-controlled data, either partially or fully, an adversary could compromise the entire system by \nexecuting arbitrary Python code.\n\nTo remediate this issue, remove all calls to `eval` and consider alternative methods for executing \nthe necessary business logic. There is almost no safe method of calling `eval` with user-supplied input.\n\nIf the application only needs to convert strings into objects, consider using `json.loads`. In \nsome cases `ast.literal_eval` is recommended, but this should be avoided as it can still suffer \nfrom other issues such as the ability for malicious code to crash the python interpreter or application.\n\nExample using `json.loads`` to load in arbitrary data to create data structures:\n```\n# User supplied data as a blob of JSON\nuser_supplied_data = \"\"\"{\"user\": \"test\", \"metadata\": [1,2,3]}\"\"\"\n# Load the JSON\nuser_object = json.loads(user_supplied_data)\n# Manually add protected properties _after_ loading, never before\nuser_object[\"is_admin\"] = False\n# Work with the object\n```\n"
+              },
+              "help": {
+                "markdown": "The application was found calling the `eval` function with non-literal data. If the variable contains \nuser-controlled data, either partially or fully, an adversary could compromise the entire system by \nexecuting arbitrary Python code.\n\nTo remediate this issue, remove all calls to `eval` and consider alternative methods for executing \nthe necessary business logic. There is almost no safe method of calling `eval` with user-supplied input.\n\nIf the application only needs to convert strings into objects, consider using `json.loads`. In \nsome cases `ast.literal_eval` is recommended, but this should be avoided as it can still suffer \nfrom other issues such as the ability for malicious code to crash the python interpreter or application.\n\nExample using `json.loads`` to load in arbitrary data to create data structures:\n```\n# User supplied data as a blob of JSON\nuser_supplied_data = \"\"\"{\"user\": \"test\", \"metadata\": [1,2,3]}\"\"\"\n# Load the JSON\nuser_object = json.loads(user_supplied_data)\n# Manually add protected properties _after_ loading, never before\nuser_object[\"is_admin\"] = False\n# Work with the object\n```\n\n\n#### \ud83d\udc8e Enable cross-file analysis and Pro rules for free at <a href='https://sg.run/pro'>sg.run/pro</a>\n\n<b>References:</b>\n - [Semgrep Rule](https://semgrep.dev/r/gitlab.bandit.B307)\n",
+                "text": "The application was found calling the `eval` function with non-literal data. If the variable contains \nuser-controlled data, either partially or fully, an adversary could compromise the entire system by \nexecuting arbitrary Python code.\n\nTo remediate this issue, remove all calls to `eval` and consider alternative methods for executing \nthe necessary business logic. There is almost no safe method of calling `eval` with user-supplied input.\n\nIf the application only needs to convert strings into objects, consider using `json.loads`. In \nsome cases `ast.literal_eval` is recommended, but this should be avoided as it can still suffer \nfrom other issues such as the ability for malicious code to crash the python interpreter or application.\n\nExample using `json.loads`` to load in arbitrary data to create data structures:\n```\n# User supplied data as a blob of JSON\nuser_supplied_data = \"\"\"{\"user\": \"test\", \"metadata\": [1,2,3]}\"\"\"\n# Load the JSON\nuser_object = json.loads(user_supplied_data)\n# Manually add protected properties _after_ loading, never before\nuser_object[\"is_admin\"] = False\n# Work with the object\n```\n\n\ud83d\udc8e Enable cross-file analysis and Pro rules for free at sg.run/pro"
+              },
+              "helpUri": "https://semgrep.dev/r/gitlab.bandit.B307",
+              "id": "gitlab.bandit.B307",
+              "name": "gitlab.bandit.B307",
+              "properties": {
+                "precision": "very-high",
+                "tags": [
+                  "CWE-95",
+                  "OWASP-A03:2021-Injection",
+                  "OWASP-A1:2017-Injection",
+                  "security"
+                ],
+                "security-severity": "High"
+              },
+              "shortDescription": {
+                "text": "Improper neutralization of directives in dynamically evaluated code ('Eval Injection')"
+              }
+            },
+            {
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "fullDescription": {
+                "text": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources."
+              },
+              "help": {
+                "markdown": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources.\n\n#### \ud83d\udc8e Enable cross-file analysis and Pro rules for free at <a href='https://sg.run/pro'>sg.run/pro</a>\n\n<b>References:</b>\n - [Semgrep Rule](https://semgrep.dev/r/python.lang.security.audit.eval-detected.eval-detected)\n - [https://owasp.org/Top10/A03_2021-Injection](https://owasp.org/Top10/A03_2021-Injection)\n",
+                "text": "Detected the use of eval(). eval() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources.\n\ud83d\udc8e Enable cross-file analysis and Pro rules for free at sg.run/pro"
+              },
+              "helpUri": "https://semgrep.dev/r/python.lang.security.audit.eval-detected.eval-detected",
+              "id": "python.lang.security.audit.eval-detected.eval-detected",
+              "name": "python.lang.security.audit.eval-detected.eval-detected",
+              "properties": {
+                "precision": "very-high",
+                "tags": [
+                  "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')",
+                  "LOW CONFIDENCE",
+                  "OWASP-A03:2021 - Injection",
+                  "security"
+                ]
+              },
+              "shortDescription": {
+                "text": "Semgrep Finding: python.lang.security.audit.eval-detected.eval-detected"
+              }
+            }
+          ],
+          "semanticVersion": "1.128.1"
+        }
+      }
+    }
+  ],
+  "$schema": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/os/schemas/sarif-schema-2.1.0.json"
+}

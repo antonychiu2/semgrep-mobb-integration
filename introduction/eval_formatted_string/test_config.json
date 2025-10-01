@@ -1,0 +1,19 @@
+{
+  "tests": [
+    ["SEMGREP", 8],
+    ["SEMGREP", 9]
+    
+  ],
+  "no_fix": [
+    ["SEMGREP", 0],
+    ["SEMGREP", 1],
+    ["SEMGREP", 2],
+    ["SEMGREP", 3],
+    ["SEMGREP", 4],
+    ["SEMGREP", 5],
+    ["SEMGREP", 6],
+    ["SEMGREP", 7]
+  ],
+  "unfixable": [
+  ]
+}

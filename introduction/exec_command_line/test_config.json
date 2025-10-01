@@ -1,0 +1,22 @@
+{
+  "unfixable": [
+    ["SNYK", 0],
+    ["SNYK", 1],
+    ["SNYK", 2],
+    ["SNYK", 3],
+    ["SNYK", 4],
+    ["SNYK", 5],
+    ["SEMGREP", 0],
+    ["SEMGREP", 1],
+    ["SEMGREP", 2],
+    ["SEMGREP", 3],
+    ["SEMGREP", 4],
+    ["SEMGREP", 5],
+    ["DATADOG", 0],
+    ["DATADOG", 1],
+    ["DATADOG", 2],
+    ["DATADOG", 3],
+    ["DATADOG", 4],
+    ["DATADOG", 5]
+  ]
+}

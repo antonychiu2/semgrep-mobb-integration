@@ -1,0 +1,30 @@
+{
+  "no_fix": [
+    ["SNYK", 2, "no support for multiline string yet"],
+    ["SNYK", 3],
+    ["SNYK", 4, "variable is used elsewhere, cannot convert"],
+    ["SNYK", 5, "a more complex case of list addition, not supported at the moment"],
+    ["SNYK", 6, "the first list element is vulnerable so cannot fix"],
+    ["SNYK", 7, "args are coming from outside the function"],
+    ["SNYK", 8, "args are coming from outside the function"],
+    ["SNYK", 9, "variable is used elsewhere, cannot convert"],
+    ["SEMGREP", 2, "no support for multiline string yet"],
+    ["SEMGREP", 3],
+    ["SEMGREP", 4, "variable is used elsewhere, cannot convert"],
+    ["SEMGREP", 7, "a more complex case of list addition, not supported at the moment"],
+    ["SEMGREP", 8, "the first list element is vulnerable so cannot fix"],
+    ["SEMGREP", 9, "args are coming from outside the function"],
+    ["SEMGREP", 10, "args are coming from outside the function"],
+    ["SEMGREP", 11, "variable is used elsewhere, cannot convert"]
+  ],
+  "tests": [
+    ["SNYK", 0],
+    ["SNYK", 1],
+    ["SEMGREP", 0],
+    ["SEMGREP", 1]
+  ],
+  "false_positive": [
+    ["SEMGREP", 5],
+    ["SEMGREP", 6]
+  ]
+}

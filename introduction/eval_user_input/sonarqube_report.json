@@ -1,0 +1,512 @@
+{
+  "total": 2,
+  "p": 1,
+  "ps": 500,
+  "paging": {
+    "pageIndex": 1,
+    "pageSize": 500,
+    "total": 2
+  },
+  "effortTotal": 60,
+  "debtTotal": 60,
+  "issues": [
+    {
+      "key": "AZjHbWHWzpM55exhXxNE",
+      "rule": "pythonsecurity:S5334",
+      "severity": "BLOCKER",
+      "component": "mobbjon_report-generator:main.py",
+      "project": "mobbjon_report-generator",
+      "line": 12,
+      "hash": "7b4252aa1a85f1315fb4ad7b2d6f62d4",
+      "textRange": {
+        "startLine": 12,
+        "endLine": 12,
+        "startOffset": 4,
+        "endOffset": 19
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "mobbjon_report-generator:main.py",
+              "textRange": {
+                "startLine": 12,
+                "endLine": 12,
+                "startOffset": 4,
+                "endOffset": 19
+              },
+              "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
+            },
+            {
+              "component": "mobbjon_report-generator:main.py",
+              "textRange": {
+                "startLine": 11,
+                "endLine": 11,
+                "startOffset": 4,
+                "endOffset": 40
+              },
+              "msg": "A malicious value can be assigned to variable \u2018user_code\u2019"
+            },
+            {
+              "component": "mobbjon_report-generator:main.py",
+              "textRange": {
+                "startLine": 11,
+                "endLine": 11,
+                "startOffset": 16,
+                "endOffset": 40
+              },
+              "msg": "Source: a user can craft an HTTP request with malicious content"
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Change this code to not dynamically execute code influenced by user-controlled data.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "",
+      "tags": [
+        "cwe"
+      ],
+      "transitions": [
+        "accept",
+        "confirm",
+        "resolve",
+        "falsepositive",
+        "wontfix"
+      ],
+      "actions": [
+        "set_type",
+        "set_tags",
+        "comment",
+        "set_severity",
+        "assign"
+      ],
+      "comments": [],
+      "creationDate": "2025-08-20T12:20:59+0000",
+      "updateDate": "2025-08-20T12:20:59+0000",
+      "type": "VULNERABILITY",
+      "organization": "mobbjon",
+      "branch": "6b1a078a-968c-40b2-b477-5827d917f61e",
+      "ruleDescriptionContextKey": "python_standard_library",
+      "cleanCodeAttribute": "COMPLETE",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "Report Generator"
+    },
+    {
+      "key": "AZjHbWHWzpM55exhXxNF",
+      "rule": "pythonsecurity:S5334",
+      "severity": "BLOCKER",
+      "component": "mobbjon_report-generator:main.py",
+      "project": "mobbjon_report-generator",
+      "line": 20,
+      "hash": "bcaf7454d57e36514b9a9ec4d6f3a770",
+      "textRange": {
+        "startLine": 20,
+        "endLine": 20,
+        "startOffset": 4,
+        "endOffset": 34
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "mobbjon_report-generator:main.py",
+              "textRange": {
+                "startLine": 20,
+                "endLine": 20,
+                "startOffset": 4,
+                "endOffset": 34
+              },
+              "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
+            },
+            {
+              "component": "mobbjon_report-generator:main.py",
+              "textRange": {
+                "startLine": 20,
+                "endLine": 20,
+                "startOffset": 9,
+                "endOffset": 33
+              },
+              "msg": "This concatenation can propagate malicious content to the newly created string"
+            },
+            {
+              "component": "mobbjon_report-generator:main.py",
+              "textRange": {
+                "startLine": 20,
+                "endLine": 20,
+                "startOffset": 21,
+                "endOffset": 31
+              },
+              "msg": "The malicious content is concatenated into the string"
+            },
+            {
+              "component": "mobbjon_report-generator:main.py",
+              "textRange": {
+                "startLine": 19,
+                "endLine": 19,
+                "startOffset": 4,
+                "endOffset": 46
+              },
+              "msg": "A malicious value can be assigned to variable \u2018expression\u2019"
+            },
+            {
+              "component": "mobbjon_report-generator:main.py",
+              "textRange": {
+                "startLine": 19,
+                "endLine": 19,
+                "startOffset": 17,
+                "endOffset": 46
+              },
+              "msg": "Source: a user can craft an HTTP request with malicious content"
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Change this code to not dynamically execute code influenced by user-controlled data.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "",
+      "tags": [
+        "cwe"
+      ],
+      "transitions": [
+        "accept",
+        "confirm",
+        "resolve",
+        "falsepositive",
+        "wontfix"
+      ],
+      "actions": [
+        "set_type",
+        "set_tags",
+        "comment",
+        "set_severity",
+        "assign"
+      ],
+      "comments": [],
+      "creationDate": "2025-08-20T12:20:59+0000",
+      "updateDate": "2025-08-20T12:20:59+0000",
+      "type": "VULNERABILITY",
+      "organization": "mobbjon",
+      "branch": "6b1a078a-968c-40b2-b477-5827d917f61e",
+      "ruleDescriptionContextKey": "python_standard_library",
+      "cleanCodeAttribute": "COMPLETE",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "Report Generator"
+    },
+    {
+      "key": "AZjHbWHWzpM55exhXxNC",
+      "component": "mobbjon_report-generator:main.py",
+      "project": "mobbjon_report-generator",
+      "securityCategory": "csrf",
+      "vulnerabilityProbability": "HIGH",
+      "status": "TO_REVIEW",
+      "line": 6,
+      "message": "Make sure disabling CSRF protection is safe here.",
+      "author": "",
+      "creationDate": "2025-08-20T12:20:59+0000",
+      "updateDate": "2025-08-20T12:20:59+0000",
+      "textRange": {
+        "startLine": 6,
+        "endLine": 6,
+        "startOffset": 6,
+        "endOffset": 21
+      },
+      "flows": [],
+      "ruleKey": "python:S4502"
+    },
+    {
+      "key": "AZjHbWHWzpM55exhXxND",
+      "component": "mobbjon_report-generator:main.py",
+      "project": "mobbjon_report-generator",
+      "securityCategory": "insecure-conf",
+      "vulnerabilityProbability": "LOW",
+      "status": "TO_REVIEW",
+      "line": 37,
+      "message": "Make sure this debug feature is deactivated before delivering the code in production.",
+      "author": "",
+      "creationDate": "2025-08-20T12:20:59+0000",
+      "updateDate": "2025-08-20T12:20:59+0000",
+      "textRange": {
+        "startLine": 37,
+        "endLine": 37,
+        "startOffset": 12,
+        "endOffset": 22
+      },
+      "flows": [],
+      "ruleKey": "python:S4507"
+    }
+  ],
+  "components": [
+    {
+      "organization": "mobbjon",
+      "key": "mobbjon_report-generator",
+      "uuid": "AZjHbVtuXsHVKP_Cdem4",
+      "enabled": true,
+      "qualifier": "TRK",
+      "name": "Report Generator",
+      "longName": "Report Generator",
+      "branch": "6b1a078a-968c-40b2-b477-5827d917f61e"
+    },
+    {
+      "organization": "mobbjon",
+      "key": "mobbjon_report-generator:main.py",
+      "uuid": "AZjHbV0IzpM55exhXxNB",
+      "enabled": true,
+      "qualifier": "FIL",
+      "name": "main.py",
+      "longName": "main.py",
+      "path": "main.py",
+      "branch": "6b1a078a-968c-40b2-b477-5827d917f61e"
+    },
+    {
+      "organization": "mobbjon",
+      "key": "mobbjon_report-generator",
+      "qualifier": "TRK",
+      "name": "Report Generator",
+      "longName": "Report Generator",
+      "branch": "6b1a078a-968c-40b2-b477-5827d917f61e"
+    },
+    {
+      "organization": "mobbjon",
+      "key": "mobbjon_report-generator:main.py",
+      "qualifier": "FIL",
+      "name": "main.py",
+      "longName": "main.py",
+      "path": "main.py",
+      "branch": "6b1a078a-968c-40b2-b477-5827d917f61e"
+    }
+  ],
+  "organizations": [
+    {
+      "key": "mobbjon",
+      "name": "Mobb"
+    }
+  ],
+  "rules": [
+    {
+      "key": "pythonsecurity:S5334",
+      "name": "Dynamic code execution should not be vulnerable to injection attacks",
+      "lang": "py",
+      "status": "READY",
+      "langName": "Python"
+    },
+    {
+      "key": "python:S4502",
+      "name": "Disabling CSRF protections is security-sensitive",
+      "severity": "CRITICAL",
+      "lang": "py",
+      "type": "SECURITY_HOTSPOT",
+      "impacts": [],
+      "securityStandards": []
+    },
+    {
+      "key": "python:S4507",
+      "name": "Delivering code in production with debug features activated is security-sensitive",
+      "severity": "MINOR",
+      "lang": "py",
+      "type": "SECURITY_HOTSPOT",
+      "impacts": [],
+      "securityStandards": []
+    }
+  ],
+  "users": [
+    {
+      "login": "kirill70@gitlab",
+      "name": "Kirill Efimov",
+      "avatar": "7acd3e49b4c136e0c62ff5e5ee1197d0",
+      "active": true
+    }
+  ],
+  "languages": [
+    {
+      "key": "cs",
+      "name": "C#"
+    },
+    {
+      "key": "ansible",
+      "name": "Ansible"
+    },
+    {
+      "key": "githubactions",
+      "name": "GitHub Actions"
+    },
+    {
+      "key": "terraform",
+      "name": "Terraform"
+    },
+    {
+      "key": "cloudformation",
+      "name": "CloudFormation"
+    },
+    {
+      "key": "kubernetes",
+      "name": "Kubernetes"
+    },
+    {
+      "key": "docker",
+      "name": "Docker"
+    },
+    {
+      "key": "azureresourcemanager",
+      "name": "Azure Resource Manager"
+    },
+    {
+      "key": "yaml",
+      "name": "YAML"
+    },
+    {
+      "key": "json",
+      "name": "JSON"
+    },
+    {
+      "key": "plsql",
+      "name": "PL/SQL"
+    },
+    {
+      "key": "scala",
+      "name": "Scala"
+    },
+    {
+      "key": "dart",
+      "name": "Dart"
+    },
+    {
+      "key": "rust",
+      "name": "Rust"
+    },
+    {
+      "key": "jcl",
+      "name": "JCL"
+    },
+    {
+      "key": "java",
+      "name": "Java"
+    },
+    {
+      "key": "web",
+      "name": "HTML"
+    },
+    {
+      "key": "jsp",
+      "name": "JSP"
+    },
+    {
+      "key": "xml",
+      "name": "XML"
+    },
+    {
+      "key": "flex",
+      "name": "Flex"
+    },
+    {
+      "key": "swift",
+      "name": "Swift"
+    },
+    {
+      "key": "c",
+      "name": "C"
+    },
+    {
+      "key": "cpp",
+      "name": "C++"
+    },
+    {
+      "key": "objc",
+      "name": "Objective-C"
+    },
+    {
+      "key": "py",
+      "name": "Python"
+    },
+    {
+      "key": "ipynb",
+      "name": "IPython Notebooks"
+    },
+    {
+      "key": "vbnet",
+      "name": "VB.NET"
+    },
+    {
+      "key": "rpg",
+      "name": "RPG"
+    },
+    {
+      "key": "go",
+      "name": "Go"
+    },
+    {
+      "key": "kotlin",
+      "name": "Kotlin"
+    },
+    {
+      "key": "pli",
+      "name": "PL/I"
+    },
+    {
+      "key": "vb",
+      "name": "Vb"
+    },
+    {
+      "key": "tsql",
+      "name": "T-SQL"
+    },
+    {
+      "key": "apex",
+      "name": "Apex"
+    },
+    {
+      "key": "js",
+      "name": "JavaScript"
+    },
+    {
+      "key": "ts",
+      "name": "TypeScript"
+    },
+    {
+      "key": "css",
+      "name": "CSS"
+    },
+    {
+      "key": "ruby",
+      "name": "Ruby"
+    },
+    {
+      "key": "secrets",
+      "name": "Secrets"
+    },
+    {
+      "key": "text",
+      "name": "Text"
+    },
+    {
+      "key": "cobol",
+      "name": "COBOL"
+    },
+    {
+      "key": "php",
+      "name": "PHP"
+    },
+    {
+      "key": "abap",
+      "name": "ABAP"
+    }
+  ],
+  "facets": []
+}

@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CxXMLResults InitiatorName="Mobb Dev" Owner="mobb.dev" ScanId="1052168" ProjectId="4905" ProjectName="kirill-test" TeamFullPathOnReportDate="CxServer\Mobb" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052168&amp;projectid=4905" ScanStart="Wednesday, July 16, 2025 11:43:08 AM" Preset="All" ScanTime="00h:00m:25s" LinesOfCodeScanned="37" FilesScanned="1" ReportCreationTime="Wednesday, July 16, 2025 11:43:45 AM" Team="Mobb" CheckmarxVersion="9.7.1.1001 HF2" ScanComments="" ScanType="Full" SourceOrigin="LocalPath" Visibility="Private">
+  <QueriesMetaData>
+    <QueryMetaData queryId="3100">
+      <QueryDescription id="1085">
+        <ResultDescription>&lt;p&gt;The application's&amp;nbsp;@DestinationMethod method receives and&amp;nbsp;dynamically executes user-controlled code using&amp;nbsp;@DestinationElement,&amp;nbsp;at line @DestinationLine of @DestinationFile. This could enable an attacker to inject and run arbitrary code.&lt;/p&gt;&lt;p&gt;The attacker can inject the executed code via user input,&amp;nbsp;@SourceElement, which is retrieved by the application in the @SourceMethod method, at line @SourceLine of @SourceFile.&lt;/p&gt;</ResultDescription>
+        <BestFixLocation></BestFixLocation>
+        <Risk>&lt;p&gt;An attacker could run arbitrary code on the application server host. Depending on the application’s OS permissions,these could include:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Database access, such as reading or modifying sensitive data;&lt;/li&gt;&lt;li&gt;File actions (read / create / modify / delete);&lt;/li&gt;&lt;li&gt;Changing the website;&lt;/li&gt;&lt;li&gt;Open a network connection to the attacker’s server;&lt;/li&gt;&lt;li&gt;Decrypt secret data using the application's encryption keys;&amp;nbsp;&lt;/li&gt;&lt;li&gt;Start and stop system services;&lt;/li&gt;&lt;li&gt;Complete server takeover.&lt;/li&gt;&lt;/ul&gt;</Risk>
+        <Cause>&lt;p&gt;The application performs some action by creating and running code that includes untrusted data, which might be under control of a malicious user. If the data contains malicious code, the executed code could contain system-level activities engineered by an attacker, as though the attacker were running code directly on the application server.&lt;/p&gt;</Cause>
+        <GeneralRecommendations>&lt;ul&gt;&lt;li&gt;The application should not compile, execute, or evaluate any untrusted code from any external source, including user input, uploaded files, or a database. &lt;/li&gt;&lt;li&gt;If it is absolutely necessary to include external data in dynamic execution, it is permissible to pass the data as parameters to the code, but do not execute user data directly.  &lt;/li&gt;&lt;li&gt;If it is necessary to pass untrusted data to dynamic execution, enforce very strict data validation. For example, accept only integers between certain values.&lt;/li&gt;&lt;li&gt;Validate all input, regardless of source. Validation should be based on a whitelist: accept only data fitting a specified structure, rather than reject bad patterns. Parameters should be limited to an allowed character set, and non-validated input should be dropped. In addition to characters, check for:&lt;ul&gt;&lt;li&gt;Data type&lt;/li&gt;&lt;li&gt;Size&lt;/li&gt;&lt;li&gt;Range&lt;/li&gt;&lt;li&gt;Format&lt;/li&gt;&lt;li&gt;Expected values&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;li&gt;If possible, always prefer to whitelist known and trusted input instead of comparing to a blacklist.&lt;/li&gt;&lt;li&gt;Configure the application to run using a restricted user account that has no unnecessary privileges.&lt;/li&gt;&lt;li&gt;If possible, isolate all dynamic execution to use a separate, dedicated user account that has privileges only for the specific operations and files used by dynamic execution, according to the Principle of Least Privilege.&lt;/li&gt;&lt;li&gt;Prefer passing user data to a pre-implemented script, e.g. in another isolated application.&amp;nbsp;&lt;/li&gt;&lt;li&gt;If the provided user data consists only of Python literals and literal containers, consider using&amp;nbsp;&lt;code&gt;ast.literal_eval()&lt;/code&gt; instead, or even the &lt;code&gt;json&lt;/code&gt; object.&lt;/li&gt;&lt;/ul&gt;</GeneralRecommendations>
+        <SourceCodeExamples>
+          <SourceCodeExample SourceLanguage="Python" Title="Dynamically Execute User Code">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-meta"&gt;@app.route('/execute')&lt;/span&gt;
+&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;execute_user_code_unsafe&lt;/span&gt;&lt;span class="hljs-params"&gt;()&lt;/span&gt;:&lt;/span&gt; 
+    user_code = request.args.get(&lt;span class="hljs-string"&gt;'code'&lt;/span&gt;)
+	result = eval(user_code)
+	
+	&lt;span class="hljs-keyword"&gt;return&lt;/span&gt; result[&lt;span class="hljs-string"&gt;'value'&lt;/span&gt;]&lt;/pre&gt;</SourceCodeExample>
+          <SourceCodeExample SourceLanguage="Python" Title="Safely Parse User's Literals">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-meta"&gt;@app.route('/execute')&lt;/span&gt;
+&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;parse_literals_safe&lt;/span&gt;&lt;span class="hljs-params"&gt;()&lt;/span&gt;:&lt;/span&gt; 
+    user_code = request.args.get(&lt;span class="hljs-string"&gt;'code'&lt;/span&gt;)
+	result = ast.literal_eval(user_code)
+	
+	&lt;span class="hljs-keyword"&gt;return&lt;/span&gt; result[&lt;span class="hljs-string"&gt;'value'&lt;/span&gt;]
+&lt;/pre&gt;</SourceCodeExample>
+        </SourceCodeExamples>
+      </QueryDescription>
+    </QueryMetaData>
+    <QueryMetaData queryId="3580">
+      <QueryDescription id="2233">
+        <ResultDescription>&lt;p&gt;Method @SourceMethod at line @SourceLine of @SourceFile gets a parameter from a user request from @SourceElement. This parameter value flows through the code and is eventually used to access application state altering functionality. This may enable Cross-Site Request Forgery (CSRF).&lt;/p&gt;</ResultDescription>
+        <BestFixLocation></BestFixLocation>
+        <Risk>&lt;p&gt;An attacker could cause the victim to perform any action for which the victim is authorized, such as transferring funds from the victim’s account to the attacker’s. The action will be logged as being performed by the victim, in the context of their account, and potentially without their knowledge that this action has occurred.&lt;/p&gt;</Risk>
+        <Cause>&lt;p&gt;The application performs some action that modifies database contents, based purely on HTTP request content, and does not require per-request renewed authentication (such as transaction authentication or a synchronizer token), instead relying solely on session authentication. This means that an attacker could use social engineering to cause a victim to browse to a link which contains a transaction request to the vulnerable application, submitting that request from the user's browser. Once the application receives the request, it would trust the victim’s session, and would perform the action. This type of attack is known as Cross-Site Request Forgery (CSRF).&lt;/p&gt;&lt;p&gt;A Cross-Site Request Forgery attack relies on the trust between a server and an authenticated client. By only validating the session, the server ensures that a request has emerged from a client's web-browser. However, any website may submit GET and POST requests to other websites, to which the browser will automatically add the session token if it is in a cookie. This cross-site request can then be trusted as arriving from the user's browser, but does not validate that it was their intent was to make this request.&lt;/p&gt;</Cause>
+        <GeneralRecommendations>&lt;p&gt;Mitigating CSRF requires an additional layer of authentication that is built into the request validation mechanism. This mechanism would attach an additional token that only applies to the given user; this token would be available within the user's web-page, but will not be attached automatically to a request from a different website (e.g. not stored in a cookie). Since the token is not automatically attached to the request, and is not available to the attacker, and is required by the server to process the request, it would be completely impossible for the attacker to fill in a valid cross-site form that contains this token.&lt;/p&gt;&lt;p&gt;Many platforms offer built-in CSRF mitigation functionality which should be used, and perform this type of token management under the hood. Alternatively, use a known or trusted library which adds this functionality.&lt;/p&gt;&lt;p&gt;If implementing CSRF protection is required, this protection should adhere to the following rules:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Any state altering form (Create, Update, Delete operations) should enforce CSRF protection, by adding an CSRF token to every state altering form submission on the client.&lt;/li&gt;&lt;li&gt;An CSRF token should be generated, and be unique per-user per-session (and, preferably, per request).&lt;/li&gt;&lt;li&gt;The CSRF token should be inserted into the client side form, and be submitted to the server as part of the form request. For example, it could be a hidden field in an HTML form, or a custom header added by a Javascript request.&lt;/li&gt;&lt;li&gt;The CSRF token in the request body or custom header must then be verified as belonging to the current user by the server, before a request is authorized and processed as valid.&lt;/li&gt;&lt;/ul&gt;</GeneralRecommendations>
+        <SourceCodeExamples>
+          <SourceCodeExample SourceLanguage="Python" Title="Wrapping Flask App with Flask-SeaSurf to Add CSRF Protection">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;app = Flask(__name__)
+csrf = SeaSurf(app)
+csrf.init_app(app)&lt;/pre&gt;</SourceCodeExample>
+          <SourceCodeExample SourceLanguage="Python" Title="Creating a Form Using Flask-WTF's FlaskForm Adds CSRF Hidden Field By Default">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-meta"&gt;@app.route('/submit', methods=('GET', 'POST'))&lt;/span&gt;
+&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;submit&lt;/span&gt;&lt;span class="hljs-params"&gt;()&lt;/span&gt;:&lt;/span&gt;
+    &lt;span class="hljs-keyword"&gt;if&lt;/span&gt; request.method == &lt;span class="hljs-string"&gt;'POST'&lt;/span&gt;:
+        username = request.form.get(&lt;span class="hljs-string"&gt;'user'&lt;/span&gt;)
+        pwd = request.form.get(&lt;span class="hljs-string"&gt;'pwd'&lt;/span&gt;)
+        user = User(username=username, email=pwd)
+        db.session.add(user)
+        db.session.commit()
+        &lt;span class="hljs-keyword"&gt;return&lt;/span&gt; &lt;span class="hljs-string"&gt;'user added'&lt;/span&gt;
+    &lt;span class="hljs-keyword"&gt;else&lt;/span&gt;:
+        form = FlaskForm()
+        &lt;span class="hljs-keyword"&gt;return&lt;/span&gt; render_template(&lt;span class="hljs-string"&gt;'submit.html'&lt;/span&gt;, form=form)&lt;/pre&gt;</SourceCodeExample>
+        </SourceCodeExamples>
+      </QueryDescription>
+    </QueryMetaData>
+    <QueryMetaData queryId="5409">
+      <QueryDescription id="1332">
+        <ResultDescription>&lt;p&gt;The web-application does not define an HSTS header, leaving it vulnerable to attack.&lt;/p&gt;</ResultDescription>
+        <BestFixLocation></BestFixLocation>
+        <Risk>&lt;p&gt;Failure to set an HSTS header and provide it with a reasonable "max-age" value of at least one year may leave users vulnerable to Man-in-the-Middle attacks.&lt;/p&gt;</Risk>
+        <Cause>&lt;p&gt;Many users browse to websites by simply typing the domain name into the address bar, without the protocol prefix. The browser will automatically assume that the user's intended protocol is HTTP, instead of the&amp;nbsp;encrypted HTTPS protocol.&lt;/p&gt;&lt;p&gt;When this initial request is made, an attacker can perform a Man-in-the-Middle attack and manipulate it to redirect users to a malicious web-site of the attacker's choosing. To protect the user from such an occurence, the HTTP Strict Transport Security (HSTS) header instructs the user's browser to disallow use of an unsecure HTTP connection to the the domain associated with the HSTS header.&lt;/p&gt;&lt;p&gt;Once&amp;nbsp;a browser that supports the HSTS feature has visited a web-site and the header was set, it will no longer allow&amp;nbsp;communicating with the domain over an HTTP connection.&lt;/p&gt;&lt;p&gt;Once an HSTS header was issued for a specific website, the browser is also instructed&amp;nbsp;to prevent users from manually overriding and accepting an untrusted SSL certificate for as long as the "max-age" value still applies. The recommended "max-age" value is for at least one year in seconds, or 31536000.&lt;/p&gt;</Cause>
+        <GeneralRecommendations>&lt;ul&gt;&lt;li&gt;Before setting the HSTS header - consider the implications it may have:&lt;ul&gt;&lt;li&gt;Forcing HTTPS will prevent any future use of HTTP, which could hinder some testing&lt;/li&gt;&lt;li&gt;Disabling HSTS is not trivial, as once it is disabled on the site, it must also be disabled on the browser&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;li&gt;Set the HSTS header either explicitly within application code, or using web-server configurations.&lt;/li&gt;&lt;li&gt;Ensure the "max-age" value for HSTS headers is set to 31536000 to ensure HSTS is strictly enforced for at least one year.&lt;/li&gt;&lt;li&gt;Include the "includeSubDomains" to maximize HSTS coverage, and ensure HSTS is enforced on all sub-domains under the current domain&lt;ul&gt;&lt;li&gt;Note that this may prevent secure browser access to any sub-domains that utilize HTTP; however, use of HTTP is very severe and highly discouraged, even for websites that do not contain any sensitive information, as their contents can still be tampered via Man-in-the-Middle attacks to phish users under the HTTP domain.&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;li&gt;Once HSTS has been enforced, submit the web-application's&amp;nbsp;address to an HSTS preload list - this will ensure that, even if a client is accessing the web-application for the first time (implying HSTS has not yet been set by the web-application), a browser that respects the HSTS preload list would still treat the web-application as if it had already issued an HSTS header. Note that this requires the server to have a trusted SSL certificate, and issue an HSTS header with a maxAge of 1 year (31536000)&lt;/li&gt;&lt;li&gt;Note that&amp;nbsp;this query is designed to return one result per application. This means that if more than one vulnerable response without an HSTS header is identified, only the first identified instance of this issue will be highlighted as a result. If a misconfigured instance of HSTS is identified (has a short lifespan, or is missing the "includeSubDomains" flag), that result will be flagged. Since HSTS is required to be enforced across the entire application to be considered a secure deployment of HSTS functionality, fixing this issue only where the query highlights this result is likely to produce subsequent results in other sections of the application; therefore, when adding this header via code, ensure it is uniformly deployed across the entire application. If this header is added via configuration, ensure that this configuration applies to the entire application.&lt;/li&gt;&lt;li&gt;Note that misconfigured HSTS headers that do not contain the recommended max-age value of at least one year or the "includeSubDomains" flag will still return a result for a missing HSTS header.&lt;/li&gt;&lt;/ul&gt;</GeneralRecommendations>
+        <SourceCodeExamples>
+          <SourceCodeExample SourceLanguage="Python" Title="Adding HSTS in Django's settings.py">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;SECURE_HSTS_SECONDS = &lt;span class="hljs-number"&gt;31536000&lt;/span&gt;, SECURE_HSTS_INCLUDE_SUBDOMAINS = &lt;span class="hljs-literal"&gt;True&lt;/span&gt;&lt;/pre&gt;</SourceCodeExample>
+          <SourceCodeExample SourceLanguage="Python" Title="Setting HSTS Header with Code in Django">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;response[&lt;span class="hljs-string"&gt;'Strict-Transport-Security'&lt;/span&gt;] = &lt;span class="hljs-string"&gt;'max-age=31536000; includeSubDomains'&lt;/span&gt;&lt;/pre&gt;</SourceCodeExample>
+          <SourceCodeExample SourceLanguage="Python" Title="Setting HSTS Header with Code in Flask">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-meta"&gt;@app.after_request&lt;/span&gt;
+&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;add_header&lt;/span&gt;&lt;span class="hljs-params"&gt;(response)&lt;/span&gt;:&lt;/span&gt;
+    response.headers[&lt;span class="hljs-string"&gt;'Strict-Transport-Security'&lt;/span&gt;] = &lt;span class="hljs-string"&gt;'max-age=31536000; includeSubDomains'&lt;/span&gt;
+    &lt;span class="hljs-keyword"&gt;return&lt;/span&gt; response&lt;/pre&gt;</SourceCodeExample>
+          <SourceCodeExample SourceLanguage="Python" Title="Wrapping a Flask App with Talisman Will Set HSTS Header By Default">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;app = Flask(__name__)
+talisman = Talisman(app)&lt;/pre&gt;</SourceCodeExample>
+        </SourceCodeExamples>
+      </QueryDescription>
+    </QueryMetaData>
+    <QueryMetaData queryId="5630">
+      <QueryDescription id="367">
+        <ResultDescription>&lt;p&gt;A Content Security Policy is not explicitly defined within the web-application.&lt;/p&gt;</ResultDescription>
+        <BestFixLocation></BestFixLocation>
+        <Risk>&lt;p&gt;The Content-Security-Policy header enforces that the source of content, such as the origin of a script, embedded (child) frame, embedding (parent) frame or image, are trusted and allowed by the current web-page; if, within the web-page, a content's source does not adhere to&amp;nbsp;a strict&amp;nbsp;Content Security Policy, it is promptly rejected by the browser. Failure to define a policy may leave the application's users exposed to Cross-Site Scripting (XSS) attacks, Clickjacking attacks, content forgery and more.&lt;/p&gt;</Risk>
+        <Cause>&lt;p&gt;The Content-Security-Policy header is used by modern browsers as an indicator for trusted sources of content, including media, images, scripts, frames and more. If these policies are not explicitly defined, default browser behavior would allow&amp;nbsp;untrusted content.&lt;/p&gt;</Cause>
+        <GeneralRecommendations>&lt;p&gt;Explicitly set the Content-Security-Policy headers for all applicable policy types (frame, script, form, script, media, img etc.) according to business requirements and deployment layout of external file hosting services. Specifically, do not use&amp;nbsp;a wildcard, '*', to specify these policies, as this would allow content from any external resource.&lt;/p&gt;&lt;p&gt;The Content-Security-Policy can be explicitly defined within web-application code, as a header&amp;nbsp;managed by&amp;nbsp;web-server configurations, or within &lt;code&gt;&amp;lt;meta&amp;gt;&lt;/code&gt; tags in the HTML &lt;code&gt;&amp;lt;head&amp;gt;&lt;/code&gt; section.&lt;/p&gt;</GeneralRecommendations>
+        <SourceCodeExamples>
+          <SourceCodeExample SourceLanguage="PHP" Title="Restricting Content-Security-Policy to Only Obtain Embedded Content from Current Web-Application">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-meta"&gt;&amp;lt;?php&lt;/span&gt;
+	header(&lt;span class="hljs-string"&gt;"Content-Security-Policy: default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self';"&lt;/span&gt;);
+&lt;span class="hljs-meta"&gt;?&amp;gt;&lt;/span&gt;&lt;/pre&gt;</SourceCodeExample>
+        </SourceCodeExamples>
+      </QueryDescription>
+    </QueryMetaData>
+    <QueryMetaData queryId="3964">
+      <QueryDescription id="363">
+        <ResultDescription>&lt;p&gt;The application source code includes @SourceElement, in line @SourceLine of @SourceFile, which was left from development and debugging, and is not part of the intended application functionality.&lt;/p&gt;</ResultDescription>
+        <BestFixLocation></BestFixLocation>
+        <Risk>&lt;p&gt;Tests and debugging code are not intended to be deployed to the production environment, and can create unintended entry points, thus increasing the application's attack surface. Furthermore, this code is often not properly tested or maintained, and can retain historic vulnerabilities that were fixed in other parts of the codebase. Often, debug code will contain a functional "back door", by enabling the programmer to bypass operational security mechanisms, such as authentication or access controls.&lt;/p&gt;</Risk>
+        <Cause>&lt;p&gt;During application development, it is common for programmers to implement specialized code, in order to ease debugging and testing. Often the programmer will even&amp;nbsp;enable the debug code to bypass security mechanisms, so as to focus the tests on the specific functionality and isolate it from the security architecture.&amp;nbsp;&lt;/p&gt;&lt;p&gt;This debug or test code is not removed from the codebase, and is then included in the software build and deployed to the production environment.&lt;/p&gt;</Cause>
+        <GeneralRecommendations>&lt;p&gt;&amp;nbsp;- Remove all debug code before deploying or building the application. Ensure the configuration settings are not defined to enable debug mode.&amp;nbsp;&amp;nbsp;- Implement all test code via a dedicated test framework, which can isolate the test case code from the rest of the application.&amp;nbsp;&amp;nbsp;- Avoid implementing special "test code", "debugging-time" functionality, or "secret" interfaces or parameters in the application code itself.&amp;nbsp;&amp;nbsp;- Define and implement a standard and automatic build / deployment process, using dedicated CI / CD tools, that can automatically configure the deployed application, exclude all temporary code, and include only intended application code.&lt;/p&gt;</GeneralRecommendations>
+        <SourceCodeExamples>
+          <SourceCodeExample SourceLanguage="Java" Title="Main in Servlet">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-keyword"&gt;public&lt;/span&gt; &lt;span class="hljs-class"&gt;&lt;span class="hljs-keyword"&gt;class&lt;/span&gt; &lt;span class="hljs-title"&gt;AppServlet&lt;/span&gt; &lt;span class="hljs-keyword"&gt;extends&lt;/span&gt; &lt;span class="hljs-title"&gt;HttpServlet&lt;/span&gt; &lt;/span&gt;{ 
+	&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;protected&lt;/span&gt; &lt;span class="hljs-keyword"&gt;void&lt;/span&gt; &lt;span class="hljs-title"&gt;doGet&lt;/span&gt;&lt;span class="hljs-params"&gt;(HttpServletRequest request, HttpServletResponse response)&lt;/span&gt; 
+      				&lt;span class="hljs-keyword"&gt;throws&lt;/span&gt; ServletException, IOException &lt;/span&gt;{
+      	&lt;span class="hljs-comment"&gt;// handle request&lt;/span&gt;
+    }
+  
+  	&lt;span class="hljs-keyword"&gt;private&lt;/span&gt; &lt;span class="hljs-keyword"&gt;static&lt;/span&gt; String MODE = &lt;span class="hljs-string"&gt;""&lt;/span&gt;;
+  	&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;public&lt;/span&gt; &lt;span class="hljs-keyword"&gt;static&lt;/span&gt; &lt;span class="hljs-keyword"&gt;void&lt;/span&gt; &lt;span class="hljs-title"&gt;main&lt;/span&gt;&lt;span class="hljs-params"&gt;(String[] args)&lt;/span&gt; &lt;/span&gt;{
+      	&lt;span class="hljs-comment"&gt;// initialize app for debugging and testing&lt;/span&gt;
+      	MODE = &lt;span class="hljs-string"&gt;"DEBUGGING"&lt;/span&gt;;
+    }
+}&lt;/pre&gt;</SourceCodeExample>
+          <SourceCodeExample SourceLanguage="Ruby" Title="Internal Test Method">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-class"&gt;&lt;span class="hljs-keyword"&gt;class&lt;/span&gt; &lt;span class="hljs-title"&gt;AppClass&lt;/span&gt;&lt;/span&gt;
+	&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;run_app&lt;/span&gt;&lt;/span&gt;
+      &lt;span class="hljs-comment"&gt;# Run the app&lt;/span&gt;
+    &lt;span class="hljs-keyword"&gt;end&lt;/span&gt;
+  	&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;test_app&lt;/span&gt;&lt;/span&gt;
+      &lt;span class="hljs-comment"&gt;# Test and debug the app&lt;/span&gt;
+    &lt;span class="hljs-keyword"&gt;end&lt;/span&gt;
+&lt;span class="hljs-keyword"&gt;end&lt;/span&gt;&lt;/pre&gt;</SourceCodeExample>
+          <SourceCodeExample SourceLanguage="CSharp" Title="Debug Configuration">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&amp;lt;configuration&amp;gt;
+	&amp;lt;system.web&amp;gt;
+    	&amp;lt;compilation debug=&lt;span class="hljs-string"&gt;"false"&lt;/span&gt; /&amp;gt;
+    &amp;lt;/system.web&amp;gt;
+&amp;lt;/configuration&amp;gt;&lt;/pre&gt;</SourceCodeExample>
+        </SourceCodeExamples>
+      </QueryDescription>
+    </QueryMetaData>
+  </QueriesMetaData>
+  <Query id="3100" categories="PCI DSS v3.2.1;PCI DSS (3.2.1) - 6.5.1 - Injection flaws - particularly SQL injection,OWASP Top 10 2013;A1-Injection,FISMA 2014;System And Information Integrity,NIST SP 800-53;SI-10 Information Input Validation (P1),OWASP Top 10 2017;A1-Injection,CWE top 25;CWE top 25,MOIS(KISA) Secure Coding 2021;MOIS(KISA) Verification and representation of input data,OWASP ASVS;V05 Validation, Sanitization and Encoding,OWASP Top 10 2021;A3-Injection,SANS top 25;SANS top 25,ASA Premium;ASA Premium,Top Tier;Top Tier,PCI DSS v4.0;PCI DSS (4.0) - 6.2.4 Vulnerabilities in software development,ASD STIG 6.1;APSC-DV-002510 - CAT I The application must protect from command injection." cweId="94" name="Code_Injection" group="Python_Critical_Risk" Severity="Critical" Language="Python" LanguageHash="4737932861188015" LanguageChangeDate="2025-01-13T00:00:00.0000000" SeverityIndex="4" QueryPath="Python\Cx\Python Critical Risk\Code Injection Version:5" QueryVersionCode="85887070">
+    <Result NodeId="10521680004" FileName="main.py" Status="New" Line="19" Column="31" FalsePositive="False" Severity="Critical" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052168&amp;projectid=4905&amp;pathid=4" SeverityIndex="4" StatusIndex="2" DetectionDate="7/16/2025 11:43:33 AM">
+      <Path ResultId="1052168" PathId="4" SimilarityId="1511086557" SourceMethod="calculate" DestinationMethod="calculate">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>19</Line>
+          <Column>31</Column>
+          <NodeId>1</NodeId>
+          <Name>get</Name>
+          <Type></Type>
+          <Length>3</Length>
+          <Snippet>
+            <Line>
+              <Number>19</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># VULNERABLE: User input from query parameters
+    expression = request.args.get('expr', '0')
+    exec(f"result = {expression}")
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>19</Line>
+          <Column>5</Column>
+          <NodeId>2</NodeId>
+          <Name>expression</Name>
+          <Type></Type>
+          <Length>10</Length>
+          <Snippet>
+            <Line>
+              <Number>19</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># VULNERABLE: User input from query parameters
+    expression = request.args.get('expr', '0')
+    exec(f"result = {expression}")
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>20</Line>
+          <Column>22</Column>
+          <NodeId>3</NodeId>
+          <Name>expression</Name>
+          <Type></Type>
+          <Length>10</Length>
+          <Snippet>
+            <Line>
+              <Number>20</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>expression = request.args.get('expr', '0')
+    exec(f"result = {expression}")
+    return str(locals().get('result', 'Error'))
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>20</Line>
+          <Column>5</Column>
+          <NodeId>4</NodeId>
+          <Name>exec</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>20</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>expression = request.args.get('expr', '0')
+    exec(f"result = {expression}")
+    return str(locals().get('result', 'Error'))
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+    <Result NodeId="10521680005" FileName="main.py" Status="New" Line="11" Column="25" FalsePositive="False" Severity="Critical" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052168&amp;projectid=4905&amp;pathid=5" SeverityIndex="4" StatusIndex="2" DetectionDate="7/16/2025 11:43:33 AM">
+      <Path ResultId="1052168" PathId="5" SimilarityId="-1442935020" SourceMethod="execute_code" DestinationMethod="execute_code">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>11</Line>
+          <Column>25</Column>
+          <NodeId>1</NodeId>
+          <Name>form</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>11</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># VULNERABLE: Direct user input to exec()
+    user_code = request.form.get('code')
+    exec(user_code)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>11</Line>
+          <Column>30</Column>
+          <NodeId>2</NodeId>
+          <Name>get</Name>
+          <Type></Type>
+          <Length>3</Length>
+          <Snippet>
+            <Line>
+              <Number>11</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># VULNERABLE: Direct user input to exec()
+    user_code = request.form.get('code')
+    exec(user_code)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>11</Line>
+          <Column>5</Column>
+          <NodeId>3</NodeId>
+          <Name>user_code</Name>
+          <Type></Type>
+          <Length>9</Length>
+          <Snippet>
+            <Line>
+              <Number>11</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># VULNERABLE: Direct user input to exec()
+    user_code = request.form.get('code')
+    exec(user_code)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>12</Line>
+          <Column>10</Column>
+          <NodeId>4</NodeId>
+          <Name>user_code</Name>
+          <Type></Type>
+          <Length>9</Length>
+          <Snippet>
+            <Line>
+              <Number>12</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>user_code = request.form.get('code')
+    exec(user_code)
+    return "Code executed"
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>12</Line>
+          <Column>5</Column>
+          <NodeId>5</NodeId>
+          <Name>exec</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>12</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>user_code = request.form.get('code')
+    exec(user_code)
+    return "Code executed"
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+  </Query>
+  <Query id="3580" categories="PCI DSS v3.2.1;PCI DSS (3.2.1) - 6.5.9 - Cross-site request forgery,OWASP Top 10 2013;A8-Cross-Site Request Forgery (CSRF),NIST SP 800-53;SC-23 Session Authenticity (P1),CWE top 25;CWE top 25,MOIS(KISA) Secure Coding 2021;MOIS(KISA) Verification and representation of input data,OWASP ASVS;V13 API and Web Service,OWASP Top 10 2021;A1-Broken Access Control,SANS top 25;SANS top 25,ASA Premium;ASA Premium,PCI DSS v4.0;PCI DSS (4.0) - 6.2.4 Vulnerabilities in software development,ASD STIG 6.1;APSC-DV-002500 - CAT II The application must protect from Cross-Site Request Forgery (CSRF) vulnerabilities." cweId="352" name="CSRF" group="Python_Medium_Threat" Severity="Medium" Language="Python" LanguageHash="4737932861188015" LanguageChangeDate="2025-01-13T00:00:00.0000000" SeverityIndex="2" QueryPath="Python\Cx\Python Medium Threat\CSRF Version:6" QueryVersionCode="92306497">
+    <Result NodeId="10521680001" FileName="main.py" Status="New" Line="17" Column="5" FalsePositive="False" Severity="Medium" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052168&amp;projectid=4905&amp;pathid=1" SeverityIndex="2" StatusIndex="2" DetectionDate="7/16/2025 11:43:33 AM">
+      <Path ResultId="1052168" PathId="1" SimilarityId="-1102042886" SourceMethod="calculate" DestinationMethod="calculate">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>17</Line>
+          <Column>5</Column>
+          <NodeId>1</NodeId>
+          <Name>calculate</Name>
+          <Type></Type>
+          <Length>9</Length>
+          <Snippet>
+            <Line>
+              <Number>17</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>@app.route('/calculate', methods=['GET'])
+def calculate():
+    # VULNERABLE: User input from query parameters
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+  </Query>
+  <Query id="5409" categories="OWASP ASVS;V14 Configuration,OWASP Top 10 2021;A7-Identification and Authentication Failures,ASA Premium;ASA Premium,OWASP Top 10 API 2023;API8-Security Misconfiguration,PCI DSS v4.0;PCI DSS (4.0) - 6.2.4 Vulnerabilities in software development" cweId="346" name="Missing_HSTS_Header" group="Python_Medium_Threat" Severity="Medium" Language="Python" LanguageHash="4737932861188015" LanguageChangeDate="2025-01-13T00:00:00.0000000" SeverityIndex="2" QueryPath="Python\Cx\Python Medium Threat\Missing HSTS Header Version:3" QueryVersionCode="118782581">
+    <Result NodeId="10521680007" FileName="main.py" Status="New" Line="6" Column="1" FalsePositive="False" Severity="Medium" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052168&amp;projectid=4905&amp;pathid=7" SeverityIndex="2" StatusIndex="2" DetectionDate="8/28/2024 9:33:45 AM">
+      <Path ResultId="1052168" PathId="7" SimilarityId="1916887208" SourceMethod="Flask" DestinationMethod="Flask">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>6</Line>
+          <Column>1</Column>
+          <NodeId>1</NodeId>
+          <Name>app</Name>
+          <Type></Type>
+          <Length>3</Length>
+          <Snippet>
+            <Line>
+              <Number>6</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+app = Flask(__name__)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+  </Query>
+  <Query id="5630" categories="OWASP ASVS;V14 Configuration,OWASP Top 10 2021;A7-Identification and Authentication Failures,PCI DSS v4.0;PCI DSS (4.0) - 6.2.4 Vulnerabilities in software development" cweId="346" name="Missing_Content_Security_Policy" group="Python_Low_Visibility" Severity="Low" Language="Python" LanguageHash="4737932861188015" LanguageChangeDate="2025-01-13T00:00:00.0000000" SeverityIndex="1" QueryPath="Python\Cx\Python Low Visibility\Missing Content Security Policy Version:2" QueryVersionCode="122197530">
+    <Result NodeId="10521680002" FileName="main.py" Status="New" Line="13" Column="5" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052168&amp;projectid=4905&amp;pathid=2" SeverityIndex="1" StatusIndex="2" DetectionDate="7/16/2025 11:43:34 AM">
+      <Path ResultId="1052168" PathId="2" SimilarityId="-1584552636" SourceMethod="execute_code" DestinationMethod="execute_code">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>13</Line>
+          <Column>5</Column>
+          <NodeId>1</NodeId>
+          <Name>ReturnStmt</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>13</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>exec(user_code)
+    return "Code executed"
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+    <Result NodeId="10521680003" FileName="main.py" Status="New" Line="6" Column="1" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052168&amp;projectid=4905&amp;pathid=3" SeverityIndex="1" StatusIndex="2" DetectionDate="8/28/2024 9:33:46 AM">
+      <Path ResultId="1052168" PathId="3" SimilarityId="1916889214" SourceMethod="Flask" DestinationMethod="Flask">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>6</Line>
+          <Column>1</Column>
+          <NodeId>1</NodeId>
+          <Name>app</Name>
+          <Type></Type>
+          <Length>3</Length>
+          <Snippet>
+            <Line>
+              <Number>6</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+app = Flask(__name__)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+  </Query>
+  <Query id="3964" categories="FISMA 2014;Configuration Management,NIST SP 800-53;SI-11 Error Handling (P2),OWASP Top 10 2017;A3-Sensitive Data Exposure,MOIS(KISA) Secure Coding 2021;MOIS(KISA) Encapsulation,OWASP Top 10 2021;A5-Security Misconfiguration,PCI DSS v4.0;PCI DSS (4.0) - 6.2.4 Vulnerabilities in software development" cweId="11" name="Debug_Enabled" group="Python_Low_Visibility" Severity="Low" Language="Python" LanguageHash="4737932861188015" LanguageChangeDate="2025-01-13T00:00:00.0000000" SeverityIndex="1" QueryPath="Python\Cx\Python Low Visibility\Debug Enabled Version:2" QueryVersionCode="97541563">
+    <Result NodeId="10521680006" FileName="main.py" Status="New" Line="37" Column="19" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052168&amp;projectid=4905&amp;pathid=6" SeverityIndex="1" StatusIndex="2" DetectionDate="7/16/2025 11:43:33 AM">
+      <Path ResultId="1052168" PathId="6" SimilarityId="423178788" SourceMethod="app.run" DestinationMethod="app.run">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>37</Line>
+          <Column>19</Column>
+          <NodeId>1</NodeId>
+          <Name>true</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>37</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>if __name__ == "__main__":
+    app.run(debug=True) 
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+  </Query>
+</CxXMLResults>
