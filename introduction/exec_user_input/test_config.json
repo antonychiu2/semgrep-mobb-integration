@@ -1,0 +1,31 @@
+{
+  "tests": [
+  ],
+  "no_fix": [
+    ["CHECKMARX", 0],
+    ["CHECKMARX_XML", 0],
+    ["CODEQL", 1],
+    ["DATADOG", 1],
+    ["SNYK", 1],
+    ["SEMGREP", 3],
+    ["SEMGREP", 4],
+    ["SEMGREP", 5],
+    ["SEMGREP", 6],
+    ["SONARQUBE", 1]
+  ],
+  "unfixable": [
+    ["SEMGREP", 0],
+    ["SEMGREP", 7],
+    ["SNYK", 0],
+    ["SNYK", 2],
+    ["CODEQL", 0],
+    ["SEMGREP", 1],
+    ["SEMGREP", 2],
+    ["DATADOG", 0],
+    ["DATADOG", 2],
+    ["DATADOG", 3],
+    ["CHECKMARX", 1],
+    ["CHECKMARX_XML", 1],
+    ["SONARQUBE", 0]
+  ]
+}
