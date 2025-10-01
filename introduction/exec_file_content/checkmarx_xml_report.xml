@@ -1,0 +1,1442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CxXMLResults InitiatorName="Mobb Dev" Owner="mobb.dev" ScanId="1052165" ProjectId="4905" ProjectName="kirill-test" TeamFullPathOnReportDate="CxServer\Mobb" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905" ScanStart="Wednesday, July 16, 2025 11:41:48 AM" Preset="All" ScanTime="00h:00m:24s" LinesOfCodeScanned="78" FilesScanned="1" ReportCreationTime="Wednesday, July 16, 2025 11:42:24 AM" Team="Mobb" CheckmarxVersion="9.7.1.1001 HF2" ScanComments="" ScanType="Full" SourceOrigin="LocalPath" Visibility="Private">
+  <QueriesMetaData>
+    <QueryMetaData queryId="6685">
+      <QueryDescription id="2242">
+        <ResultDescription>&lt;p&gt;The application's @DestinationMethod method calls an OS (shell) command with @DestinationElement, at line @DestinationLine of @DestinationFile, using an untrusted string with the command to execute. &amp;nbsp;&lt;/p&gt;&lt;p&gt;This could allow an attacker to inject an arbitrary command, and enable a Command Injection attack.&lt;/p&gt;&lt;p&gt;The attacker may be able to inject the executed command into the database, which is then retrieved by the application with @SourceElement, at line @SourceLine of @SourceFile, in the @SourceMethod method.&lt;/p&gt;</ResultDescription>
+        <BestFixLocation></BestFixLocation>
+        <Risk>&lt;p&gt;An attacker could run arbitrary system-level OS commands on the application server host. Depending on the application’s OS permissions, these could include:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;File actions (read / create / modify / delete)&lt;/li&gt;&lt;li&gt;Open a network connection to the attacker’s server&lt;/li&gt;&lt;li&gt;Start and stop system services&lt;/li&gt;&lt;li&gt;Modify the running application&lt;/li&gt;&lt;li&gt;Complete server takeover&lt;/li&gt;&lt;/ul&gt;</Risk>
+        <Cause>&lt;p&gt;The application runs an OS system-level command to complete it's task, rather than via the application code. The command includes untrusted data, that may be controllable by an attacker. This untrusted string may contain malicious system-level commands engineered by an attacker, which could be executed as though the attacker were running commands directly on the application server.&lt;/p&gt;&lt;p&gt;In this case, the application reads the command from the database, and passes it as a string to the Operating System. The attacker may be able to load the malicious payload into the database fields beforehand, causing the application to load that command.&amp;nbsp;This unvalidated data is then executed by the OS as a system command, running with the same system privileges as the application.&lt;/p&gt;</Cause>
+        <GeneralRecommendations>&lt;ul&gt;&lt;li&gt;Refactor the code to avoid any direct shell command execution. Instead, use platform provided APIs or library calls.&lt;/li&gt;&lt;li&gt;If it is impossible to remove the command execution, execute only static commands that do not include dynamic, user-controlled data.&lt;/li&gt;&lt;li&gt;Validate all input, regardless of source. Validation should be based on a whitelist: accept only data fitting a specified format, rather than rejecting bad patterns (blacklist). Parameters should be limited to an allowed character set, and non-validated input should be dropped. In addition to characters, check for:&lt;ul&gt;&lt;li&gt;Data type&lt;/li&gt;&lt;li&gt;Size&lt;/li&gt;&lt;li&gt;Range&lt;/li&gt;&lt;li&gt;Format&lt;/li&gt;&lt;li&gt;Expected values&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;li&gt;In order to minimize damage as a measure of defense in depth, configure the application to run using a restricted user account that has no unnecessary OS privileges.&lt;/li&gt;&lt;li&gt;If possible, isolate all OS commands to use a separate dedicated user account that has minimal privileges only for the specific commands and files used by the application, according to the Principle of Least Privilege.&lt;/li&gt;&lt;/ul&gt;</GeneralRecommendations>
+        <SourceCodeExamples>
+          <SourceCodeExample SourceLanguage="Python" Title="Execute OS Commands From DB Without Validation">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;runCommand&lt;/span&gt;&lt;span class="hljs-params"&gt;(request)&lt;/span&gt;:&lt;/span&gt;
+    num = request.GET[&lt;span class="hljs-string"&gt;'index'&lt;/span&gt;]
+    cmd = Command.objects().get(pk=num)
+    cmd_val = getattr(cmd, &lt;span class="hljs-string"&gt;'command'&lt;/span&gt;) 
+    res = os.system(cmd_val)
+    &lt;span class="hljs-keyword"&gt;return&lt;/span&gt; HttpResponse(res)&lt;/pre&gt;</SourceCodeExample>
+        </SourceCodeExamples>
+      </QueryDescription>
+    </QueryMetaData>
+    <QueryMetaData queryId="5618">
+      <QueryDescription id="1545">
+        <ResultDescription>&lt;p&gt;The application's&amp;nbsp;@DestinationMethod method receives and&amp;nbsp;dynamically executes user-controlled code using&amp;nbsp;@DestinationElement,&amp;nbsp;at line @DestinationLine of @DestinationFile. This could enable an attacker to inject and run arbitrary code.&lt;/p&gt;&lt;p&gt;The attacker can inject the executed code by inserting the payload in standard text fields in the database or a local file. This text is retrieved by&amp;nbsp;the @SourceMethod method, using&amp;nbsp;@SourceElement, at line @SourceLine of @SourceFile, and then sent to the executing method.&lt;/p&gt;</ResultDescription>
+        <BestFixLocation></BestFixLocation>
+        <Risk>&lt;p&gt;An attacker could run arbitrary code on the application server host. Depending on the application’s OS permissions,these could include:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Database access, such as reading or modifying sensitive data;&lt;/li&gt;&lt;li&gt;File actions (read / create / modify / delete);&lt;/li&gt;&lt;li&gt;Changing the website;&lt;/li&gt;&lt;li&gt;Open a network connection to the attacker’s server;&lt;/li&gt;&lt;li&gt;Decrypt secret data using the application's encryption keys;&amp;nbsp;&lt;/li&gt;&lt;li&gt;Start and stop system services;&lt;/li&gt;&lt;li&gt;Complete server takeover.&lt;/li&gt;&lt;/ul&gt;</Risk>
+        <Cause>&lt;p&gt;The application performs some action by creating and running code that includes untrusted data, which might be under control of a malicious user. If the data contains malicious code, the executed code could contain system-level activities engineered by an attacker, as though the attacker were running code directly on the application server.&lt;/p&gt;</Cause>
+        <GeneralRecommendations>&lt;ul&gt;&lt;li&gt;The application should not compile, execute, or evaluate any untrusted code from any external source, including user input, uploaded files, or a database. &lt;/li&gt;&lt;li&gt;If it is absolutely necessary to include external data in dynamic execution, it is permissible to pass the data as parameters to the code, but do not execute user data directly.  &lt;/li&gt;&lt;li&gt;If it is necessary to pass untrusted data to dynamic execution, enforce very strict data validation. For example, accept only integers between certain values.&lt;/li&gt;&lt;li&gt;Validate all input, regardless of source. Validation should be based on a whitelist: accept only data fitting a specified structure, rather than reject bad patterns. Parameters should be limited to an allowed character set, and non-validated input should be dropped. In addition to characters, check for:&lt;ul&gt;&lt;li&gt;Data type&lt;/li&gt;&lt;li&gt;Size&lt;/li&gt;&lt;li&gt;Range&lt;/li&gt;&lt;li&gt;Format&lt;/li&gt;&lt;li&gt;Expected values&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;li&gt;If possible, always prefer to whitelist known and trusted input instead of comparing to a blacklist.&lt;/li&gt;&lt;li&gt;Configure the application to run using a restricted user account that has no unnecessary privileges.&lt;/li&gt;&lt;li&gt;If possible, isolate all dynamic execution to use a separate, dedicated user account that has privileges only for the specific operations and files used by dynamic execution, according to the Principle of Least Privilege.&lt;/li&gt;&lt;/ul&gt;</GeneralRecommendations>
+        <SourceCodeExamples>
+          <SourceCodeExample SourceLanguage="Python" Title="Dynamically Execute User Code">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-meta"&gt;@app.route('/executefromstorage')&lt;/span&gt;
+&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;execute_from_file_unsafe&lt;/span&gt;&lt;span class="hljs-params"&gt;(filename)&lt;/span&gt;:&lt;/span&gt; 
+    stored_code = read_from_file(filename)
+	result = eval(stored_code)
+	
+	&lt;span class="hljs-keyword"&gt;return&lt;/span&gt; result[&lt;span class="hljs-string"&gt;'value'&lt;/span&gt;]&lt;/pre&gt;</SourceCodeExample>
+          <SourceCodeExample SourceLanguage="Python" Title="Safely Parse User's Literals">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-meta"&gt;@app.route('/executefromstorage')&lt;/span&gt;
+&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;execute_from_file&lt;/span&gt;&lt;span class="hljs-params"&gt;(filename)&lt;/span&gt;:&lt;/span&gt; 
+    stored_code = read_from_file(filename)
+	result = ast.literal_eval(stored_code)
+	
+	&lt;span class="hljs-keyword"&gt;return&lt;/span&gt; result[&lt;span class="hljs-string"&gt;'value'&lt;/span&gt;]&lt;/pre&gt;</SourceCodeExample>
+        </SourceCodeExamples>
+      </QueryDescription>
+    </QueryMetaData>
+    <QueryMetaData queryId="6715">
+      <QueryDescription id="2455">
+        <ResultDescription>&lt;p&gt;An argument is passed to an external OS command by @DestinationElement at @DestinationFile in line @DestinationLine. This could allow an attacker to attack the external program by injecting malicious arguments into its execution.&lt;/p&gt;&lt;p&gt;The attacker may be able to inject a command or argument to execute into storage, which is then retrieved by the application with @SourceElement, at line @SourceLine of @SourceFile, in the @SourceMethod method.&lt;/p&gt;</ResultDescription>
+        <BestFixLocation></BestFixLocation>
+        <Risk>&lt;p&gt;The impact of an attacker-controlled argument passed to an external program depends on the functionality, capability, implementation and permissions granted to this program. Invoking a program that allows OS commands may allow command injection, an external compiler or interpreter may allow for code injection or a file path can be manipulated to allow path traversal. In other cases, the external program may itself be vulnerable to attack, such as a buffer overflow.&lt;/p&gt;</Risk>
+        <Cause>&lt;p&gt;A potentially tainted value is passed as an argument to an external program, which is executed by code.&lt;/p&gt;</Cause>
+        <GeneralRecommendations>&lt;ul&gt;&lt;li&gt;Refactor the code to avoid any direct shell command execution. Instead, use platform provided APIs or library calls.&lt;/li&gt;&lt;li&gt;If it is impossible to remove the command execution, execute only static commands that do not include dynamic, user-controlled data.&lt;/li&gt;&lt;li&gt;Validate all input, regardless of source. Validation should be based on a whitelist: accept only data fitting a specified format, rather than rejecting bad patterns (blacklist). Parameters should be limited to an allowed character set, and non-validated input should be dropped. In addition to characters, check for:&lt;ul&gt;&lt;li&gt;Data type&lt;/li&gt;&lt;li&gt;Size&lt;/li&gt;&lt;li&gt;Range&lt;/li&gt;&lt;li&gt;Format&lt;/li&gt;&lt;li&gt;Expected values&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;li&gt;In order to minimize damage as a measure of defense in depth, configure the application to run using a restricted user account that has no unnecessary OS privileges.&lt;/li&gt;&lt;li&gt;If possible, isolate all OS commands to use a separate dedicated user account that has minimal privileges only for the specific commands and files used by the application, according to the Principle of Least Privilege.&lt;/li&gt;&lt;/ul&gt;</GeneralRecommendations>
+        <SourceCodeExamples>
+          <SourceCodeExample SourceLanguage="Python" Title="Execute a File By ID From User Input">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-comment"&gt;# Django application &lt;/span&gt;
+
+&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;exec_file&lt;/span&gt;&lt;span class="hljs-params"&gt;(request)&lt;/span&gt;:&lt;/span&gt;
+    num = request.GET[&lt;span class="hljs-string"&gt;'index'&lt;/span&gt;]
+    file = File.objects.get(pk=num)
+    filename = getattr(file, &lt;span class="hljs-string"&gt;'filename'&lt;/span&gt;) 
+    res = subprocess([EXTERNAL_EXECUTABLE, filename])
+    &lt;span class="hljs-keyword"&gt;return&lt;/span&gt; HttpResponse(res)&lt;/pre&gt;</SourceCodeExample>
+        </SourceCodeExamples>
+      </QueryDescription>
+    </QueryMetaData>
+    <QueryMetaData queryId="5824">
+      <QueryDescription id="323">
+        <ResultDescription>&lt;p&gt;A possible Denial of Service was found in line @DestinationLine in @DestinationFile file. Not closing connection leaves the server vulnerable to a DoS as the resource are not release properly.&lt;/p&gt;</ResultDescription>
+        <BestFixLocation></BestFixLocation>
+        <Risk>&lt;p&gt;&amp;nbsp;An attacker could prepare malicious input data which would cause a denial of service (DEP violation and application crash).&lt;/p&gt;</Risk>
+        <Cause>&lt;p&gt;Web Server Gateway Interface (WSGI) is a Python specification for universal interface between web server and Python web applications. The WSGI specification is specified in PEP 333 and PEP 3333.&lt;/p&gt;&lt;p&gt;PEP 3333 (WSGI) claims: “If the iterable returned by the application has a close() method, the server or gateway must call that method upon completion of the current request, whether the request was completed normally, or terminated early due to an application error during iteration or an early disconnect of the browser.”. In case a WSGI Python application does not properly close server connections, an attacker could cause a denial of service (DEP violation and application crash).&lt;/p&gt;</Cause>
+        <GeneralRecommendations>&lt;ul&gt;&lt;li&gt;Close all server connections - Make sure all the WSGI Python application connections are closed properly.&lt;/li&gt;&lt;li&gt;If the WSGI Python application iterable object has a close() method you have to call it on all execution paths of the program. You can use the Python's contextlib module for these iterable objects.&lt;/li&gt;&lt;/ul&gt;</GeneralRecommendations>
+        <SourceCodeExamples>
+          <SourceCodeExample SourceLanguage="Python" Title="The Application Does Not Properly Close A Server Connection">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-keyword"&gt;import&lt;/span&gt; os
+&lt;span class="hljs-keyword"&gt;import&lt;/span&gt; sys
+
+&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;run_with_cgi&lt;/span&gt;&lt;span class="hljs-params"&gt;(application)&lt;/span&gt;:&lt;/span&gt;
+    environ = dict(os.environ.items())
+    environ[&lt;span class="hljs-string"&gt;'wsgi.errors'&lt;/span&gt;] = sys.stderr
+    environ[&lt;span class="hljs-string"&gt;'wsgi.input'&lt;/span&gt;] = sys.stdin
+    environ[&lt;span class="hljs-string"&gt;'wsgi.multiprocess'&lt;/span&gt;] = &lt;span class="hljs-literal"&gt;True&lt;/span&gt;
+    environ[&lt;span class="hljs-string"&gt;'wsgi.multithread'&lt;/span&gt;] = &lt;span class="hljs-literal"&gt;False&lt;/span&gt;
+    environ[&lt;span class="hljs-string"&gt;'wsgi.run_once'&lt;/span&gt;] = &lt;span class="hljs-literal"&gt;True&lt;/span&gt;
+    environ[&lt;span class="hljs-string"&gt;'wsgi.url_scheme'&lt;/span&gt;] = &lt;span class="hljs-string"&gt;'http'&lt;/span&gt;
+    environ[&lt;span class="hljs-string"&gt;'wsgi.version'&lt;/span&gt;] = (&lt;span class="hljs-number"&gt;1&lt;/span&gt;, &lt;span class="hljs-number"&gt;0&lt;/span&gt;)
+
+    headers_set = [], headers_sent = []
+
+    &lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;write_data&lt;/span&gt;&lt;span class="hljs-params"&gt;(data)&lt;/span&gt;:&lt;/span&gt;
+        &lt;span class="hljs-keyword"&gt;if&lt;/span&gt; &lt;span class="hljs-keyword"&gt;not&lt;/span&gt; headers_set:
+             &lt;span class="hljs-keyword"&gt;raise&lt;/span&gt; AssertionError(&lt;span class="hljs-string"&gt;"write"&lt;/span&gt;)
+        &lt;span class="hljs-keyword"&gt;elif&lt;/span&gt; &lt;span class="hljs-keyword"&gt;not&lt;/span&gt; headers_sent:
+             status, response_headers = headers_sent[:] = headers_set
+             sys.stdout.write_data(&lt;span class="hljs-string"&gt;'Status: %s\r\n'&lt;/span&gt; % status)
+             &lt;span class="hljs-keyword"&gt;for&lt;/span&gt; header &lt;span class="hljs-keyword"&gt;in&lt;/span&gt; response_headers:
+                 sys.stdout.write_data(&lt;span class="hljs-string"&gt;'%s: %s\r\n'&lt;/span&gt; % header)
+             sys.stdout.write_data(&lt;span class="hljs-string"&gt;'\r\n'&lt;/span&gt;)
+
+        sys.stdout.write_data(data)
+        sys.stdout.flush()
+
+    &lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;response&lt;/span&gt;&lt;span class="hljs-params"&gt;(status, response_headers, exc_info=None)&lt;/span&gt;:&lt;/span&gt;
+        &lt;span class="hljs-keyword"&gt;if&lt;/span&gt; exc_info:
+            &lt;span class="hljs-keyword"&gt;try&lt;/span&gt;:
+                &lt;span class="hljs-keyword"&gt;if&lt;/span&gt; headers_sent:
+                    &lt;span class="hljs-keyword"&gt;raise&lt;/span&gt; exc_info[&lt;span class="hljs-number"&gt;0&lt;/span&gt;], exc_info[&lt;span class="hljs-number"&gt;1&lt;/span&gt;], exc_info[&lt;span class="hljs-number"&gt;2&lt;/span&gt;]
+            &lt;span class="hljs-keyword"&gt;finally&lt;/span&gt;:
+                exc_info = &lt;span class="hljs-literal"&gt;None&lt;/span&gt;
+        &lt;span class="hljs-keyword"&gt;elif&lt;/span&gt; headers_set:
+            &lt;span class="hljs-keyword"&gt;raise&lt;/span&gt; AssertionError(&lt;span class="hljs-string"&gt;"headers"&lt;/span&gt;)
+
+        headers_set[:] = [status, response_headers]
+        &lt;span class="hljs-keyword"&gt;return&lt;/span&gt; write_data
+
+    result = application(environ, response)
+    &lt;span class="hljs-keyword"&gt;for&lt;/span&gt; data &lt;span class="hljs-keyword"&gt;in&lt;/span&gt; result:
+        &lt;span class="hljs-keyword"&gt;if&lt;/span&gt; data:
+            write_data(data)
+    &lt;span class="hljs-keyword"&gt;if&lt;/span&gt; &lt;span class="hljs-keyword"&gt;not&lt;/span&gt; headers_sent:
+        write_data(&lt;span class="hljs-string"&gt;''&lt;/span&gt;)&lt;/pre&gt;</SourceCodeExample>
+          <SourceCodeExample SourceLanguage="Python" Title="The Application Invokes the Close() Method of the WSGI Application's iterable Object, If the Method Exists">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-keyword"&gt;import&lt;/span&gt; os
+&lt;span class="hljs-keyword"&gt;import&lt;/span&gt; sys
+
+&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;run_with_cgi&lt;/span&gt;&lt;span class="hljs-params"&gt;(application)&lt;/span&gt;:&lt;/span&gt;
+    environ = dict(os.environ.items())
+    environ[&lt;span class="hljs-string"&gt;'wsgi.errors'&lt;/span&gt;] = sys.stderr
+    environ[&lt;span class="hljs-string"&gt;'wsgi.input'&lt;/span&gt;] = sys.stdin
+    environ[&lt;span class="hljs-string"&gt;'wsgi.multiprocess'&lt;/span&gt;] = &lt;span class="hljs-literal"&gt;True&lt;/span&gt;
+    environ[&lt;span class="hljs-string"&gt;'wsgi.multithread'&lt;/span&gt;] = &lt;span class="hljs-literal"&gt;False&lt;/span&gt;
+    environ[&lt;span class="hljs-string"&gt;'wsgi.run_once'&lt;/span&gt;] = &lt;span class="hljs-literal"&gt;True&lt;/span&gt;
+    environ[&lt;span class="hljs-string"&gt;'wsgi.url_scheme'&lt;/span&gt;] = &lt;span class="hljs-string"&gt;'http'&lt;/span&gt;
+    environ[&lt;span class="hljs-string"&gt;'wsgi.version'&lt;/span&gt;] = (&lt;span class="hljs-number"&gt;1&lt;/span&gt;, &lt;span class="hljs-number"&gt;0&lt;/span&gt;)
+
+    headers_set = [], headers_sent = []
+
+    &lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;write_data&lt;/span&gt;&lt;span class="hljs-params"&gt;(data)&lt;/span&gt;:&lt;/span&gt;
+        &lt;span class="hljs-keyword"&gt;if&lt;/span&gt; &lt;span class="hljs-keyword"&gt;not&lt;/span&gt; headers_set:
+             &lt;span class="hljs-keyword"&gt;raise&lt;/span&gt; AssertionError(&lt;span class="hljs-string"&gt;"write"&lt;/span&gt;)
+        &lt;span class="hljs-keyword"&gt;elif&lt;/span&gt; &lt;span class="hljs-keyword"&gt;not&lt;/span&gt; headers_sent:
+             status, response_headers = headers_sent[:] = headers_set
+             sys.stdout.write_data(&lt;span class="hljs-string"&gt;'Status: %s\r\n'&lt;/span&gt; % status)
+             &lt;span class="hljs-keyword"&gt;for&lt;/span&gt; header &lt;span class="hljs-keyword"&gt;in&lt;/span&gt; response_headers:
+                 sys.stdout.write_data(&lt;span class="hljs-string"&gt;'%s: %s\r\n'&lt;/span&gt; % header)
+             sys.stdout.write_data(&lt;span class="hljs-string"&gt;'\r\n'&lt;/span&gt;)
+
+        sys.stdout.write_data(data)
+        sys.stdout.flush()
+
+    &lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;response&lt;/span&gt;&lt;span class="hljs-params"&gt;(status, response_headers, exc_info=None)&lt;/span&gt;:&lt;/span&gt;
+        &lt;span class="hljs-keyword"&gt;if&lt;/span&gt; exc_info:
+            &lt;span class="hljs-keyword"&gt;try&lt;/span&gt;:
+                &lt;span class="hljs-keyword"&gt;if&lt;/span&gt; headers_sent:
+                    &lt;span class="hljs-keyword"&gt;raise&lt;/span&gt; exc_info[&lt;span class="hljs-number"&gt;0&lt;/span&gt;], exc_info[&lt;span class="hljs-number"&gt;1&lt;/span&gt;], exc_info[&lt;span class="hljs-number"&gt;2&lt;/span&gt;]
+            &lt;span class="hljs-keyword"&gt;finally&lt;/span&gt;:
+                exc_info = &lt;span class="hljs-literal"&gt;None&lt;/span&gt;
+        &lt;span class="hljs-keyword"&gt;elif&lt;/span&gt; headers_set:
+            &lt;span class="hljs-keyword"&gt;raise&lt;/span&gt; AssertionError(&lt;span class="hljs-string"&gt;"headers"&lt;/span&gt;)
+
+        headers_set[:] = [status, response_headers]
+        &lt;span class="hljs-keyword"&gt;return&lt;/span&gt; write_data
+
+    result = application(environ, response)
+    &lt;span class="hljs-keyword"&gt;try&lt;/span&gt;:
+        &lt;span class="hljs-keyword"&gt;for&lt;/span&gt; data &lt;span class="hljs-keyword"&gt;in&lt;/span&gt; result:
+            &lt;span class="hljs-keyword"&gt;if&lt;/span&gt; data:
+                write_data(data)
+        &lt;span class="hljs-keyword"&gt;if&lt;/span&gt; &lt;span class="hljs-keyword"&gt;not&lt;/span&gt; headers_sent:
+            write_data(&lt;span class="hljs-string"&gt;''&lt;/span&gt;)
+    &lt;span class="hljs-keyword"&gt;finally&lt;/span&gt;:
+        &lt;span class="hljs-keyword"&gt;if&lt;/span&gt; hasattr(result, &lt;span class="hljs-string"&gt;'close'&lt;/span&gt;):
+            result.close()&lt;/pre&gt;</SourceCodeExample>
+        </SourceCodeExamples>
+      </QueryDescription>
+    </QueryMetaData>
+  </QueriesMetaData>
+  <Query id="6685" categories="CWE top 25;CWE top 25,MOIS(KISA) Secure Coding 2021;MOIS(KISA) Verification and representation of input data,OWASP Top 10 2021;A3-Injection,PCI DSS v4.0;PCI DSS (4.0) - 6.2.4 Vulnerabilities in software development" cweId="77" name="Stored_Command_Injection" group="Python_Medium_Threat" Severity="Medium" Language="Python" LanguageHash="4737932861188015" LanguageChangeDate="2025-01-13T00:00:00.0000000" SeverityIndex="2" QueryPath="Python\Cx\Python Medium Threat\Stored Command Injection Version:5" QueryVersionCode="139296400">
+    <Result NodeId="10521650002" FileName="main.py" Status="New" Line="9" Column="26" FalsePositive="False" Severity="Medium" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=2" SeverityIndex="2" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="2" SimilarityId="202289154" SourceMethod="execute_python_file" DestinationMethod="execute_python_file">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>9</Line>
+          <Column>26</Column>
+          <NodeId>1</NodeId>
+          <Name>read</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>9</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(filepath, 'r') as f:
+        file_content = f.read()
+    exec(file_content)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>9</Line>
+          <Column>9</Column>
+          <NodeId>2</NodeId>
+          <Name>file_content</Name>
+          <Type></Type>
+          <Length>12</Length>
+          <Snippet>
+            <Line>
+              <Number>9</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(filepath, 'r') as f:
+        file_content = f.read()
+    exec(file_content)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>10</Line>
+          <Column>10</Column>
+          <NodeId>3</NodeId>
+          <Name>file_content</Name>
+          <Type></Type>
+          <Length>12</Length>
+          <Snippet>
+            <Line>
+              <Number>10</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>file_content = f.read()
+    exec(file_content)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+    <Result NodeId="10521650003" FileName="main.py" Status="New" Line="17" Column="24" FalsePositive="False" Severity="Medium" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=3" SeverityIndex="2" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="3" SimilarityId="1758206758" SourceMethod="execute_user_uploaded_script" DestinationMethod="execute_user_uploaded_script">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>17</Line>
+          <Column>24</Column>
+          <NodeId>1</NodeId>
+          <Name>read</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>17</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(upload_path, 'r') as f:
+            script = f.read()
+        
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>17</Line>
+          <Column>13</Column>
+          <NodeId>2</NodeId>
+          <Name>script</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>17</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(upload_path, 'r') as f:
+            script = f.read()
+        
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>20</Line>
+          <Column>14</Column>
+          <NodeId>3</NodeId>
+          <Name>script</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>20</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># Try to execute the uploaded script
+        exec(script)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+    <Result NodeId="10521650004" FileName="main.py" Status="New" Line="38" Column="22" FalsePositive="False" Severity="Medium" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=4" SeverityIndex="2" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="4" SimilarityId="1327303090" SourceMethod="process_template_file" DestinationMethod="process_template_file">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>38</Line>
+          <Column>22</Column>
+          <NodeId>1</NodeId>
+          <Name>read</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>38</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(template_path, 'r') as f:
+        template = f.read()
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>38</Line>
+          <Column>9</Column>
+          <NodeId>2</NodeId>
+          <Name>template</Name>
+          <Type></Type>
+          <Length>8</Length>
+          <Snippet>
+            <Line>
+              <Number>38</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(template_path, 'r') as f:
+        template = f.read()
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>45</Line>
+          <Column>10</Column>
+          <NodeId>3</NodeId>
+          <Name>template</Name>
+          <Type></Type>
+          <Length>8</Length>
+          <Snippet>
+            <Line>
+              <Number>45</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># Execute the processed template
+    exec(template)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+    <Result NodeId="10521650005" FileName="main.py" Status="New" Line="58" Column="33" FalsePositive="False" Severity="Medium" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=5" SeverityIndex="2" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="5" SimilarityId="-1224479309" SourceMethod="load_plugin" DestinationMethod="load_plugin">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>58</Line>
+          <Column>33</Column>
+          <NodeId>1</NodeId>
+          <Name>read</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>58</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(plugin_path, 'r') as f:
+                plugin_code = f.read()
+            
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>58</Line>
+          <Column>17</Column>
+          <NodeId>2</NodeId>
+          <Name>plugin_code</Name>
+          <Type></Type>
+          <Length>11</Length>
+          <Snippet>
+            <Line>
+              <Number>58</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(plugin_path, 'r') as f:
+                plugin_code = f.read()
+            
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>61</Line>
+          <Column>18</Column>
+          <NodeId>3</NodeId>
+          <Name>plugin_code</Name>
+          <Type></Type>
+          <Length>11</Length>
+          <Snippet>
+            <Line>
+              <Number>61</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># Execute plugin code
+            exec(plugin_code)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+    <Result NodeId="10521650006" FileName="main.py" Status="New" Line="69" Column="28" FalsePositive="False" Severity="Medium" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=6" SeverityIndex="2" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="6" SimilarityId="-85324285" SourceMethod="execute_from_url" DestinationMethod="execute_from_url">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>69</Line>
+          <Column>28</Column>
+          <NodeId>1</NodeId>
+          <Name>read</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>69</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>response = urllib.request.urlopen(url)
+    remote_code = response.read().decode('utf-8')
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>69</Line>
+          <Column>35</Column>
+          <NodeId>2</NodeId>
+          <Name>decode</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>69</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>response = urllib.request.urlopen(url)
+    remote_code = response.read().decode('utf-8')
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>69</Line>
+          <Column>5</Column>
+          <NodeId>3</NodeId>
+          <Name>remote_code</Name>
+          <Type></Type>
+          <Length>11</Length>
+          <Snippet>
+            <Line>
+              <Number>69</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>response = urllib.request.urlopen(url)
+    remote_code = response.read().decode('utf-8')
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>71</Line>
+          <Column>10</Column>
+          <NodeId>4</NodeId>
+          <Name>remote_code</Name>
+          <Type></Type>
+          <Length>11</Length>
+          <Snippet>
+            <Line>
+              <Number>71</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    exec(remote_code)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+  </Query>
+  <Query id="5618" categories="CWE top 25;CWE top 25,MOIS(KISA) Secure Coding 2021;MOIS(KISA) Verification and representation of input data,OWASP ASVS;V05 Validation, Sanitization and Encoding,OWASP Top 10 2021;A3-Injection,SANS top 25;SANS top 25,PCI DSS v4.0;PCI DSS (4.0) - 6.2.4 Vulnerabilities in software development" cweId="94" name="Stored_Code_Injection" group="Python_Low_Visibility" Severity="Low" Language="Python" LanguageHash="4737932861188015" LanguageChangeDate="2025-01-13T00:00:00.0000000" SeverityIndex="1" QueryPath="Python\Cx\Python Low Visibility\Stored Code Injection Version:3" QueryVersionCode="122025634">
+    <Result NodeId="10521650007" FileName="main.py" Status="New" Line="9" Column="26" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=7" SeverityIndex="1" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="7" SimilarityId="202259149" SourceMethod="execute_python_file" DestinationMethod="execute_python_file">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>9</Line>
+          <Column>26</Column>
+          <NodeId>1</NodeId>
+          <Name>read</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>9</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(filepath, 'r') as f:
+        file_content = f.read()
+    exec(file_content)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>9</Line>
+          <Column>9</Column>
+          <NodeId>2</NodeId>
+          <Name>file_content</Name>
+          <Type></Type>
+          <Length>12</Length>
+          <Snippet>
+            <Line>
+              <Number>9</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(filepath, 'r') as f:
+        file_content = f.read()
+    exec(file_content)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>10</Line>
+          <Column>10</Column>
+          <NodeId>3</NodeId>
+          <Name>file_content</Name>
+          <Type></Type>
+          <Length>12</Length>
+          <Snippet>
+            <Line>
+              <Number>10</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>file_content = f.read()
+    exec(file_content)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>10</Line>
+          <Column>5</Column>
+          <NodeId>4</NodeId>
+          <Name>exec</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>10</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>file_content = f.read()
+    exec(file_content)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+    <Result NodeId="10521650008" FileName="main.py" Status="New" Line="17" Column="24" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=8" SeverityIndex="1" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="8" SimilarityId="1758176753" SourceMethod="execute_user_uploaded_script" DestinationMethod="execute_user_uploaded_script">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>17</Line>
+          <Column>24</Column>
+          <NodeId>1</NodeId>
+          <Name>read</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>17</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(upload_path, 'r') as f:
+            script = f.read()
+        
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>17</Line>
+          <Column>13</Column>
+          <NodeId>2</NodeId>
+          <Name>script</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>17</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(upload_path, 'r') as f:
+            script = f.read()
+        
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>20</Line>
+          <Column>14</Column>
+          <NodeId>3</NodeId>
+          <Name>script</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>20</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># Try to execute the uploaded script
+        exec(script)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>20</Line>
+          <Column>9</Column>
+          <NodeId>4</NodeId>
+          <Name>exec</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>20</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># Try to execute the uploaded script
+        exec(script)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+    <Result NodeId="10521650009" FileName="main.py" Status="New" Line="38" Column="22" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=9" SeverityIndex="1" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="9" SimilarityId="1327273085" SourceMethod="process_template_file" DestinationMethod="process_template_file">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>38</Line>
+          <Column>22</Column>
+          <NodeId>1</NodeId>
+          <Name>read</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>38</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(template_path, 'r') as f:
+        template = f.read()
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>38</Line>
+          <Column>9</Column>
+          <NodeId>2</NodeId>
+          <Name>template</Name>
+          <Type></Type>
+          <Length>8</Length>
+          <Snippet>
+            <Line>
+              <Number>38</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(template_path, 'r') as f:
+        template = f.read()
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>45</Line>
+          <Column>10</Column>
+          <NodeId>3</NodeId>
+          <Name>template</Name>
+          <Type></Type>
+          <Length>8</Length>
+          <Snippet>
+            <Line>
+              <Number>45</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># Execute the processed template
+    exec(template)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>45</Line>
+          <Column>5</Column>
+          <NodeId>4</NodeId>
+          <Name>exec</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>45</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># Execute the processed template
+    exec(template)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+    <Result NodeId="10521650010" FileName="main.py" Status="New" Line="58" Column="33" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=10" SeverityIndex="1" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="10" SimilarityId="-1224509314" SourceMethod="load_plugin" DestinationMethod="load_plugin">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>58</Line>
+          <Column>33</Column>
+          <NodeId>1</NodeId>
+          <Name>read</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>58</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(plugin_path, 'r') as f:
+                plugin_code = f.read()
+            
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>58</Line>
+          <Column>17</Column>
+          <NodeId>2</NodeId>
+          <Name>plugin_code</Name>
+          <Type></Type>
+          <Length>11</Length>
+          <Snippet>
+            <Line>
+              <Number>58</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(plugin_path, 'r') as f:
+                plugin_code = f.read()
+            
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>61</Line>
+          <Column>18</Column>
+          <NodeId>3</NodeId>
+          <Name>plugin_code</Name>
+          <Type></Type>
+          <Length>11</Length>
+          <Snippet>
+            <Line>
+              <Number>61</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># Execute plugin code
+            exec(plugin_code)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>61</Line>
+          <Column>13</Column>
+          <NodeId>4</NodeId>
+          <Name>exec</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>61</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># Execute plugin code
+            exec(plugin_code)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+    <Result NodeId="10521650011" FileName="main.py" Status="New" Line="69" Column="28" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=11" SeverityIndex="1" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="11" SimilarityId="-85354290" SourceMethod="execute_from_url" DestinationMethod="execute_from_url">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>69</Line>
+          <Column>28</Column>
+          <NodeId>1</NodeId>
+          <Name>read</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>69</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>response = urllib.request.urlopen(url)
+    remote_code = response.read().decode('utf-8')
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>69</Line>
+          <Column>35</Column>
+          <NodeId>2</NodeId>
+          <Name>decode</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>69</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>response = urllib.request.urlopen(url)
+    remote_code = response.read().decode('utf-8')
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>69</Line>
+          <Column>5</Column>
+          <NodeId>3</NodeId>
+          <Name>remote_code</Name>
+          <Type></Type>
+          <Length>11</Length>
+          <Snippet>
+            <Line>
+              <Number>69</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>response = urllib.request.urlopen(url)
+    remote_code = response.read().decode('utf-8')
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>71</Line>
+          <Column>10</Column>
+          <NodeId>4</NodeId>
+          <Name>remote_code</Name>
+          <Type></Type>
+          <Length>11</Length>
+          <Snippet>
+            <Line>
+              <Number>71</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    exec(remote_code)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>71</Line>
+          <Column>5</Column>
+          <NodeId>5</NodeId>
+          <Name>exec</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>71</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    exec(remote_code)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+  </Query>
+  <Query id="6715" categories="CWE top 25;CWE top 25,MOIS(KISA) Secure Coding 2021;MOIS(KISA) Verification and representation of input data,OWASP ASVS;V05 Validation, Sanitization and Encoding,OWASP Top 10 2021;A3-Injection,SANS top 25;SANS top 25" cweId="88" name="Stored_Command_Argument_Injection" group="Python_Low_Visibility" Severity="Low" Language="Python" LanguageHash="4737932861188015" LanguageChangeDate="2025-01-13T00:00:00.0000000" SeverityIndex="1" QueryPath="Python\Cx\Python Low Visibility\Stored Command Argument Injection Version:2" QueryVersionCode="139747405">
+    <Result NodeId="10521650012" FileName="main.py" Status="New" Line="9" Column="26" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=12" SeverityIndex="1" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="12" SimilarityId="202289898" SourceMethod="execute_python_file" DestinationMethod="execute_python_file">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>9</Line>
+          <Column>26</Column>
+          <NodeId>1</NodeId>
+          <Name>read</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>9</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(filepath, 'r') as f:
+        file_content = f.read()
+    exec(file_content)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>9</Line>
+          <Column>9</Column>
+          <NodeId>2</NodeId>
+          <Name>file_content</Name>
+          <Type></Type>
+          <Length>12</Length>
+          <Snippet>
+            <Line>
+              <Number>9</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(filepath, 'r') as f:
+        file_content = f.read()
+    exec(file_content)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>10</Line>
+          <Column>10</Column>
+          <NodeId>3</NodeId>
+          <Name>file_content</Name>
+          <Type></Type>
+          <Length>12</Length>
+          <Snippet>
+            <Line>
+              <Number>10</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>file_content = f.read()
+    exec(file_content)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>10</Line>
+          <Column>5</Column>
+          <NodeId>4</NodeId>
+          <Name>exec</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>10</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>file_content = f.read()
+    exec(file_content)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+    <Result NodeId="10521650013" FileName="main.py" Status="New" Line="17" Column="24" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=13" SeverityIndex="1" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="13" SimilarityId="1758207502" SourceMethod="execute_user_uploaded_script" DestinationMethod="execute_user_uploaded_script">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>17</Line>
+          <Column>24</Column>
+          <NodeId>1</NodeId>
+          <Name>read</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>17</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(upload_path, 'r') as f:
+            script = f.read()
+        
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>17</Line>
+          <Column>13</Column>
+          <NodeId>2</NodeId>
+          <Name>script</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>17</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(upload_path, 'r') as f:
+            script = f.read()
+        
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>20</Line>
+          <Column>14</Column>
+          <NodeId>3</NodeId>
+          <Name>script</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>20</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># Try to execute the uploaded script
+        exec(script)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>20</Line>
+          <Column>9</Column>
+          <NodeId>4</NodeId>
+          <Name>exec</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>20</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># Try to execute the uploaded script
+        exec(script)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+    <Result NodeId="10521650014" FileName="main.py" Status="New" Line="38" Column="22" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=14" SeverityIndex="1" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="14" SimilarityId="1327303834" SourceMethod="process_template_file" DestinationMethod="process_template_file">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>38</Line>
+          <Column>22</Column>
+          <NodeId>1</NodeId>
+          <Name>read</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>38</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(template_path, 'r') as f:
+        template = f.read()
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>38</Line>
+          <Column>9</Column>
+          <NodeId>2</NodeId>
+          <Name>template</Name>
+          <Type></Type>
+          <Length>8</Length>
+          <Snippet>
+            <Line>
+              <Number>38</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(template_path, 'r') as f:
+        template = f.read()
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>45</Line>
+          <Column>10</Column>
+          <NodeId>3</NodeId>
+          <Name>template</Name>
+          <Type></Type>
+          <Length>8</Length>
+          <Snippet>
+            <Line>
+              <Number>45</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># Execute the processed template
+    exec(template)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>45</Line>
+          <Column>5</Column>
+          <NodeId>4</NodeId>
+          <Name>exec</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>45</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># Execute the processed template
+    exec(template)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+    <Result NodeId="10521650015" FileName="main.py" Status="New" Line="58" Column="33" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=15" SeverityIndex="1" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="15" SimilarityId="-1224478565" SourceMethod="load_plugin" DestinationMethod="load_plugin">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>58</Line>
+          <Column>33</Column>
+          <NodeId>1</NodeId>
+          <Name>read</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>58</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(plugin_path, 'r') as f:
+                plugin_code = f.read()
+            
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>58</Line>
+          <Column>17</Column>
+          <NodeId>2</NodeId>
+          <Name>plugin_code</Name>
+          <Type></Type>
+          <Length>11</Length>
+          <Snippet>
+            <Line>
+              <Number>58</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(plugin_path, 'r') as f:
+                plugin_code = f.read()
+            
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>61</Line>
+          <Column>18</Column>
+          <NodeId>3</NodeId>
+          <Name>plugin_code</Name>
+          <Type></Type>
+          <Length>11</Length>
+          <Snippet>
+            <Line>
+              <Number>61</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># Execute plugin code
+            exec(plugin_code)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>61</Line>
+          <Column>13</Column>
+          <NodeId>4</NodeId>
+          <Name>exec</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>61</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># Execute plugin code
+            exec(plugin_code)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+    <Result NodeId="10521650016" FileName="main.py" Status="New" Line="68" Column="31" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=16" SeverityIndex="1" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="16" SimilarityId="69267877" SourceMethod="execute_from_url" DestinationMethod="execute_from_url">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>68</Line>
+          <Column>31</Column>
+          <NodeId>1</NodeId>
+          <Name>urlopen</Name>
+          <Type></Type>
+          <Length>7</Length>
+          <Snippet>
+            <Line>
+              <Number>68</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    response = urllib.request.urlopen(url)
+    remote_code = response.read().decode('utf-8')
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>68</Line>
+          <Column>5</Column>
+          <NodeId>2</NodeId>
+          <Name>response</Name>
+          <Type></Type>
+          <Length>8</Length>
+          <Snippet>
+            <Line>
+              <Number>68</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    response = urllib.request.urlopen(url)
+    remote_code = response.read().decode('utf-8')
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>69</Line>
+          <Column>19</Column>
+          <NodeId>3</NodeId>
+          <Name>response</Name>
+          <Type></Type>
+          <Length>8</Length>
+          <Snippet>
+            <Line>
+              <Number>69</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>response = urllib.request.urlopen(url)
+    remote_code = response.read().decode('utf-8')
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>69</Line>
+          <Column>28</Column>
+          <NodeId>4</NodeId>
+          <Name>read</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>69</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>response = urllib.request.urlopen(url)
+    remote_code = response.read().decode('utf-8')
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>69</Line>
+          <Column>35</Column>
+          <NodeId>5</NodeId>
+          <Name>decode</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>69</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>response = urllib.request.urlopen(url)
+    remote_code = response.read().decode('utf-8')
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>69</Line>
+          <Column>5</Column>
+          <NodeId>6</NodeId>
+          <Name>remote_code</Name>
+          <Type></Type>
+          <Length>11</Length>
+          <Snippet>
+            <Line>
+              <Number>69</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>response = urllib.request.urlopen(url)
+    remote_code = response.read().decode('utf-8')
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>71</Line>
+          <Column>10</Column>
+          <NodeId>7</NodeId>
+          <Name>remote_code</Name>
+          <Type></Type>
+          <Length>11</Length>
+          <Snippet>
+            <Line>
+              <Number>71</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    exec(remote_code)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>71</Line>
+          <Column>5</Column>
+          <NodeId>8</NodeId>
+          <Name>exec</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>71</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    exec(remote_code)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+  </Query>
+  <Query id="5824" categories="MOIS(KISA) Secure Coding 2021;MOIS(KISA) Code error,PCI DSS v4.0;PCI DSS (4.0) - 6.2.4 Vulnerabilities in software development" cweId="404" name="Improper_Resource_Shutdown_or_Release" group="Python_Low_Visibility" Severity="Low" Language="Python" LanguageHash="4737932861188015" LanguageChangeDate="2025-01-13T00:00:00.0000000" SeverityIndex="1" QueryPath="Python\Cx\Python Low Visibility\Improper Resource Shutdown or Release Version:3" QueryVersionCode="125264881">
+    <Result NodeId="10521650001" FileName="main.py" Status="New" Line="68" Column="5" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052165&amp;projectid=4905&amp;pathid=1" SeverityIndex="1" StatusIndex="2" DetectionDate="7/16/2025 11:42:13 AM">
+      <Path ResultId="1052165" PathId="1" SimilarityId="1536789739" SourceMethod="execute_from_url" DestinationMethod="execute_from_url">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>68</Line>
+          <Column>5</Column>
+          <NodeId>1</NodeId>
+          <Name>response</Name>
+          <Type></Type>
+          <Length>8</Length>
+          <Snippet>
+            <Line>
+              <Number>68</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    response = urllib.request.urlopen(url)
+    remote_code = response.read().decode('utf-8')
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>69</Line>
+          <Column>19</Column>
+          <NodeId>2</NodeId>
+          <Name>response</Name>
+          <Type></Type>
+          <Length>8</Length>
+          <Snippet>
+            <Line>
+              <Number>69</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>response = urllib.request.urlopen(url)
+    remote_code = response.read().decode('utf-8')
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+  </Query>
+</CxXMLResults>

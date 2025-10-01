@@ -1,0 +1,281 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "toolExecutionNotifications": []
+        }
+      ],
+      "results": [
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 23,
+                  "endLine": 10,
+                  "snippet": {
+                    "text": "    exec(file_content)"
+                  },
+                  "startColumn": 5,
+                  "startLine": 10
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected the use of exec(). exec() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.exec-detected.exec-detected"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 21,
+                  "endLine": 20,
+                  "snippet": {
+                    "text": "        exec(script)"
+                  },
+                  "startColumn": 9,
+                  "startLine": 20
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected the use of exec(). exec() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.exec-detected.exec-detected"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 26,
+                  "endLine": 32,
+                  "snippet": {
+                    "text": "        exec(config_code)"
+                  },
+                  "startColumn": 9,
+                  "startLine": 32
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected the use of exec(). exec() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.exec-detected.exec-detected"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 19,
+                  "endLine": 45,
+                  "snippet": {
+                    "text": "    exec(template)"
+                  },
+                  "startColumn": 5,
+                  "startLine": 45
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected the use of exec(). exec() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.exec-detected.exec-detected"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 30,
+                  "endLine": 61,
+                  "snippet": {
+                    "text": "            exec(plugin_code)"
+                  },
+                  "startColumn": 13,
+                  "startLine": 61
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected the use of exec(). exec() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.exec-detected.exec-detected"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 43,
+                  "endLine": 68,
+                  "snippet": {
+                    "text": "    response = urllib.request.urlopen(url)"
+                  },
+                  "startColumn": 16,
+                  "startLine": 68
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected a dynamic value being used with urllib. urllib supports 'file://' schemes, so a dynamic value controlled by a malicious actor may allow them to read arbitrary files. Audit uses of urllib calls to ensure user data cannot control the URLs, or consider using the 'requests' library instead."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 22,
+                  "endLine": 71,
+                  "snippet": {
+                    "text": "    exec(remote_code)"
+                  },
+                  "startColumn": 5,
+                  "startLine": 71
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected the use of exec(). exec() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.exec-detected.exec-detected"
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "Semgrep OSS",
+          "rules": [
+            {
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "fullDescription": {
+                "text": "Detected a dynamic value being used with urllib. urllib supports 'file://' schemes, so a dynamic value controlled by a malicious actor may allow them to read arbitrary files. Audit uses of urllib calls to ensure user data cannot control the URLs, or consider using the 'requests' library instead."
+              },
+              "help": {
+                "markdown": "Detected a dynamic value being used with urllib. urllib supports 'file://' schemes, so a dynamic value controlled by a malicious actor may allow them to read arbitrary files. Audit uses of urllib calls to ensure user data cannot control the URLs, or consider using the 'requests' library instead.\n\n#### \ud83d\udc8e Enable cross-file analysis and Pro rules for free at <a href='https://sg.run/pro'>sg.run/pro</a>\n\n<b>References:</b>\n - [Semgrep Rule](https://semgrep.dev/r/python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected)\n - [https://cwe.mitre.org/data/definitions/939.html](https://cwe.mitre.org/data/definitions/939.html)\n",
+                "text": "Detected a dynamic value being used with urllib. urllib supports 'file://' schemes, so a dynamic value controlled by a malicious actor may allow them to read arbitrary files. Audit uses of urllib calls to ensure user data cannot control the URLs, or consider using the 'requests' library instead.\n\ud83d\udc8e Enable cross-file analysis and Pro rules for free at sg.run/pro"
+              },
+              "helpUri": "https://semgrep.dev/r/python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected",
+              "id": "python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected",
+              "name": "python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected",
+              "properties": {
+                "precision": "very-high",
+                "tags": [
+                  "CWE-939: Improper Authorization in Handler for Custom URL Scheme",
+                  "LOW CONFIDENCE",
+                  "OWASP-A01:2017 - Injection",
+                  "security"
+                ]
+              },
+              "shortDescription": {
+                "text": "Semgrep Finding: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected"
+              }
+            },
+            {
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "fullDescription": {
+                "text": "Detected the use of exec(). exec() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources."
+              },
+              "help": {
+                "markdown": "Detected the use of exec(). exec() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources.\n\n#### \ud83d\udc8e Enable cross-file analysis and Pro rules for free at <a href='https://sg.run/pro'>sg.run/pro</a>\n\n<b>References:</b>\n - [Semgrep Rule](https://semgrep.dev/r/python.lang.security.audit.exec-detected.exec-detected)\n - [https://owasp.org/Top10/A03_2021-Injection](https://owasp.org/Top10/A03_2021-Injection)\n",
+                "text": "Detected the use of exec(). exec() can be dangerous if used to evaluate dynamic content. If this content can be input from outside the program, this may be a code injection vulnerability. Ensure evaluated content is not definable by external sources.\n\ud83d\udc8e Enable cross-file analysis and Pro rules for free at sg.run/pro"
+              },
+              "helpUri": "https://semgrep.dev/r/python.lang.security.audit.exec-detected.exec-detected",
+              "id": "python.lang.security.audit.exec-detected.exec-detected",
+              "name": "python.lang.security.audit.exec-detected.exec-detected",
+              "properties": {
+                "precision": "very-high",
+                "tags": [
+                  "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')",
+                  "LOW CONFIDENCE",
+                  "OWASP-A03:2021 - Injection",
+                  "security"
+                ]
+              },
+              "shortDescription": {
+                "text": "Semgrep Finding: python.lang.security.audit.exec-detected.exec-detected"
+              }
+            }
+          ],
+          "semanticVersion": "1.101.0"
+        }
+      }
+    }
+  ],
+  "$schema": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/os/schemas/sarif-schema-2.1.0.json"
+}

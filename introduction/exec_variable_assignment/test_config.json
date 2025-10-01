@@ -1,0 +1,25 @@
+{
+  "tests": [
+    ["SEMGREP", 1],
+    ["SNYK", 0],
+    ["DATADOG", 1]
+  ],
+  "no_fix": [
+    ["CHECKMARX", 0],
+    ["CHECKMARX", 2],
+    ["CHECKMARX_XML", 1],
+    ["CHECKMARX_XML", 2],
+    ["SEMGREP", 0],
+    ["SEMGREP", 3],
+    ["SEMGREP", 5],
+    ["DATADOG", 0],
+    ["DATADOG", 3],
+    ["DATADOG", 5],
+    ["CHECKMARX_XML", 0],
+    ["CHECKMARX", 1]
+  ],
+  "unfixable": [
+    ["SEMGREP", 4],
+    ["DATADOG", 4]
+  ]
+}

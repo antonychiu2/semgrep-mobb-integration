@@ -1,0 +1,16 @@
+{
+  "tests": [
+  ],
+  "no_fix": [
+    ["SEMGREP", 0],
+    ["SEMGREP", 2],
+    ["SEMGREP", 3],
+    ["SEMGREP", 4],
+    ["DATADOG", 0],
+    ["DATADOG", 2],
+    ["DATADOG", 3],
+    ["DATADOG", 4]
+  ],
+  "unfixable": [
+  ]
+}

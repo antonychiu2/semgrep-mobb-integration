@@ -1,0 +1,508 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "invocations": [
+        {
+          "executionSuccessful": true,
+          "toolExecutionNotifications": []
+        }
+      ],
+      "results": [
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "helper_windows.go",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 49,
+                  "endLine": 70,
+                  "snippet": {
+                    "text": "\terr = exec.Command(dest, \"/silent\", \"/install\").Run()"
+                  },
+                  "startColumn": 8,
+                  "startLine": 70
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected non-static command inside Command. Audit the input to 'exec.Command'. If unverified user data can reach this call site, this is a code injection vulnerability. A malicious actor can inject a malicious script to execute arbitrary code."
+          },
+          "properties": {},
+          "ruleId": "go.lang.security.audit.dangerous-exec-command.dangerous-exec-command"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "util.go",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 58,
+                  "endLine": 22,
+                  "snippet": {
+                    "text": "\t\t\tTLSClientConfig: &tls.Config{InsecureSkipVerify: true},"
+                  },
+                  "startColumn": 22,
+                  "startLine": 22
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "`MinVersion` is missing from this TLS configuration.  By default, TLS 1.2 is currently used as the minimum when acting as a client, and TLS 1.0 when acting as a server. General purpose web applications should default to TLS 1.3 with all other protocols disabled.  Only where it is known that a web server must support legacy clients with unsupported an insecure browsers (such as Internet Explorer 10), it may be necessary to enable TLS 1.0 to provide support. Add `MinVersion: tls.VersionTLS13' to the TLS configuration to bump the minimum version to TLS 1.3."
+          },
+          "properties": {},
+          "ruleId": "go.lang.security.audit.crypto.missing-ssl-minversion.missing-ssl-minversion"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "util.go",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 58,
+                  "endLine": 22,
+                  "snippet": {
+                    "text": "\t\t\tTLSClientConfig: &tls.Config{InsecureSkipVerify: true},"
+                  },
+                  "startColumn": 22,
+                  "startLine": 22
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Checks for disabling of TLS/SSL certificate verification. This should only be used for debugging purposes because it leads to vulnerability to MTM attacks."
+          },
+          "properties": {},
+          "ruleId": "problem-based-packs.insecure-transport.go-stdlib.bypass-tls-verification.bypass-tls-verification"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "util.go",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 37,
+                  "endLine": 221,
+                  "snippet": {
+                    "text": "\t\t\t_, err = io.Copy(outFile, inFile)"
+                  },
+                  "startColumn": 13,
+                  "startLine": 221
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected a possible denial-of-service via a zip bomb attack. By limiting the max bytes read, you can mitigate this attack. `io.CopyN()` can specify a size. "
+          },
+          "properties": {},
+          "ruleId": "go.lang.security.decompression_bomb.potential-dos-via-decompression-bomb"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "webinterceptor.go",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 48,
+                  "endLine": 139,
+                  "snippet": {
+                    "text": "\tc := exec.Command(webInterceptorPath, args...)"
+                  },
+                  "startColumn": 7,
+                  "startLine": 139
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected non-static command inside Command. Audit the input to 'exec.Command'. If unverified user data can reach this call site, this is a code injection vulnerability. A malicious actor can inject a malicious script to execute arbitrary code."
+          },
+          "properties": {},
+          "ruleId": "go.lang.security.audit.dangerous-exec-command.dangerous-exec-command"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "webinterceptor.go",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 77,
+                  "endLine": 179,
+                  "snippet": {
+                    "text": "\tc := exec.CommandContext(ctx, webInterceptorPath, url, \"--dump-html\", path)"
+                  },
+                  "startColumn": 7,
+                  "startLine": 179
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected non-static command inside Command. Audit the input to 'exec.Command'. If unverified user data can reach this call site, this is a code injection vulnerability. A malicious actor can inject a malicious script to execute arbitrary code."
+          },
+          "properties": {},
+          "ruleId": "go.lang.security.audit.dangerous-exec-command.dangerous-exec-command"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "webinterceptor/build.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 90,
+                  "endLine": 15,
+                  "snippet": {
+                    "text": "    output = subprocess.check_output(f'security find-certificate -c \"{cert}\"', shell=True).decode('utf-8')"
+                  },
+                  "startColumn": 86,
+                  "startLine": 15
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Found 'subprocess' function 'check_output' with 'shell=True'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use 'shell=False' instead."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.subprocess-shell-true.subprocess-shell-true"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "webinterceptor/build.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 36,
+                  "endLine": 23,
+                  "snippet": {
+                    "text": "                         shell=True,"
+                  },
+                  "startColumn": 32,
+                  "startLine": 23
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Found 'subprocess' function 'Popen' with 'shell=True'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use 'shell=False' instead."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.subprocess-shell-true.subprocess-shell-true"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "webinterceptor/build.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 64,
+                  "endLine": 132,
+                  "snippet": {
+                    "text": "            subprocess.run(f'{args.win_sign} {exe}', shell=True, cwd=current_dir)"
+                  },
+                  "startColumn": 60,
+                  "startLine": 132
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Found 'subprocess' function 'run' with 'shell=True'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use 'shell=False' instead."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.subprocess-shell-true.subprocess-shell-true"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "webview.go",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 41,
+                  "endLine": 194,
+                  "snippet": {
+                    "text": "\tc := exec.Command(webviewPath, args...)"
+                  },
+                  "startColumn": 7,
+                  "startLine": 194
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Detected non-static command inside Command. Audit the input to 'exec.Command'. If unverified user data can reach this call site, this is a code injection vulnerability. A malicious actor can inject a malicious script to execute arbitrary code."
+          },
+          "properties": {},
+          "ruleId": "go.lang.security.audit.dangerous-exec-command.dangerous-exec-command"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "webview/build_cert.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 90,
+                  "endLine": 7,
+                  "snippet": {
+                    "text": "    output = subprocess.check_output(f'security find-certificate -c \"{cert}\"', shell=True).decode('utf-8')"
+                  },
+                  "startColumn": 86,
+                  "startLine": 7
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Found 'subprocess' function 'check_output' with 'shell=True'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use 'shell=False' instead."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.subprocess-shell-true.subprocess-shell-true"
+        },
+        {
+          "fingerprints": {
+            "matchBasedId/v1": "requires login"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "webview/build_pyinstaller.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "endColumn": 45,
+                  "endLine": 68,
+                  "snippet": {
+                    "text": "    subprocess.run(args.win_sign, shell=True)"
+                  },
+                  "startColumn": 41,
+                  "startLine": 68
+                }
+              }
+            }
+          ],
+          "message": {
+            "text": "Found 'subprocess' function 'run' with 'shell=True'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use 'shell=False' instead."
+          },
+          "properties": {},
+          "ruleId": "python.lang.security.audit.subprocess-shell-true.subprocess-shell-true"
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "Semgrep OSS",
+          "rules": [
+            {
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "fullDescription": {
+                "text": "`MinVersion` is missing from this TLS configuration.  By default, TLS 1.2 is currently used as the minimum when acting as a client, and TLS 1.0 when acting as a server. General purpose web applications should default to TLS 1.3 with all other protocols disabled.  Only where it is known that a web server must support legacy clients with unsupported an insecure browsers (such as Internet Explorer 10), it may be necessary to enable TLS 1.0 to provide support. Add `MinVersion: tls.VersionTLS13' to the TLS configuration to bump the minimum version to TLS 1.3."
+              },
+              "help": {
+                "markdown": "`MinVersion` is missing from this TLS configuration.  By default, TLS 1.2 is currently used as the minimum when acting as a client, and TLS 1.0 when acting as a server. General purpose web applications should default to TLS 1.3 with all other protocols disabled.  Only where it is known that a web server must support legacy clients with unsupported an insecure browsers (such as Internet Explorer 10), it may be necessary to enable TLS 1.0 to provide support. Add `MinVersion: tls.VersionTLS13' to the TLS configuration to bump the minimum version to TLS 1.3.\n\n#### \ud83d\udc8e Enable cross-file analysis and Pro rules for free at <a href='https://sg.run/pro'>sg.run/pro</a>\n\n<b>References:</b>\n - [Semgrep Rule](https://semgrep.dev/r/go.lang.security.audit.crypto.missing-ssl-minversion.missing-ssl-minversion)\n - [https://golang.org/doc/go1.14#crypto/tls](https://golang.org/doc/go1.14#crypto/tls)\n - [https://golang.org/pkg/crypto/tls/#:~:text=MinVersion](https://golang.org/pkg/crypto/tls/#:~:text=MinVersion)\n - [https://www.us-cert.gov/ncas/alerts/TA14-290A](https://www.us-cert.gov/ncas/alerts/TA14-290A)\n",
+                "text": "`MinVersion` is missing from this TLS configuration.  By default, TLS 1.2 is currently used as the minimum when acting as a client, and TLS 1.0 when acting as a server. General purpose web applications should default to TLS 1.3 with all other protocols disabled.  Only where it is known that a web server must support legacy clients with unsupported an insecure browsers (such as Internet Explorer 10), it may be necessary to enable TLS 1.0 to provide support. Add `MinVersion: tls.VersionTLS13' to the TLS configuration to bump the minimum version to TLS 1.3.\n\ud83d\udc8e Enable cross-file analysis and Pro rules for free at sg.run/pro"
+              },
+              "helpUri": "https://semgrep.dev/r/go.lang.security.audit.crypto.missing-ssl-minversion.missing-ssl-minversion",
+              "id": "go.lang.security.audit.crypto.missing-ssl-minversion.missing-ssl-minversion",
+              "name": "go.lang.security.audit.crypto.missing-ssl-minversion.missing-ssl-minversion",
+              "properties": {
+                "precision": "very-high",
+                "tags": [
+                  "CWE-327: Use of a Broken or Risky Cryptographic Algorithm",
+                  "HIGH CONFIDENCE",
+                  "OWASP-A02:2021 - Cryptographic Failures",
+                  "OWASP-A03:2017 - Sensitive Data Exposure",
+                  "security"
+                ]
+              },
+              "shortDescription": {
+                "text": "Semgrep Finding: go.lang.security.audit.crypto.missing-ssl-minversion.missing-ssl-minversion"
+              }
+            },
+            {
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "fullDescription": {
+                "text": "Detected non-static command inside Command. Audit the input to 'exec.Command'. If unverified user data can reach this call site, this is a code injection vulnerability. A malicious actor can inject a malicious script to execute arbitrary code."
+              },
+              "help": {
+                "markdown": "Detected non-static command inside Command. Audit the input to 'exec.Command'. If unverified user data can reach this call site, this is a code injection vulnerability. A malicious actor can inject a malicious script to execute arbitrary code.\n\n#### \ud83d\udc8e Enable cross-file analysis and Pro rules for free at <a href='https://sg.run/pro'>sg.run/pro</a>\n\n<b>References:</b>\n - [Semgrep Rule](https://semgrep.dev/r/go.lang.security.audit.dangerous-exec-command.dangerous-exec-command)\n - [https://owasp.org/Top10/A03_2021-Injection](https://owasp.org/Top10/A03_2021-Injection)\n",
+                "text": "Detected non-static command inside Command. Audit the input to 'exec.Command'. If unverified user data can reach this call site, this is a code injection vulnerability. A malicious actor can inject a malicious script to execute arbitrary code.\n\ud83d\udc8e Enable cross-file analysis and Pro rules for free at sg.run/pro"
+              },
+              "helpUri": "https://semgrep.dev/r/go.lang.security.audit.dangerous-exec-command.dangerous-exec-command",
+              "id": "go.lang.security.audit.dangerous-exec-command.dangerous-exec-command",
+              "name": "go.lang.security.audit.dangerous-exec-command.dangerous-exec-command",
+              "properties": {
+                "precision": "very-high",
+                "tags": [
+                  "CWE-94: Improper Control of Generation of Code ('Code Injection')",
+                  "LOW CONFIDENCE",
+                  "OWASP-A03:2021 - Injection",
+                  "security"
+                ]
+              },
+              "shortDescription": {
+                "text": "Semgrep Finding: go.lang.security.audit.dangerous-exec-command.dangerous-exec-command"
+              }
+            },
+            {
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "fullDescription": {
+                "text": "Detected a possible denial-of-service via a zip bomb attack. By limiting the max bytes read, you can mitigate this attack. `io.CopyN()` can specify a size. "
+              },
+              "help": {
+                "markdown": "Detected a possible denial-of-service via a zip bomb attack. By limiting the max bytes read, you can mitigate this attack. `io.CopyN()` can specify a size. \n\n#### \ud83d\udc8e Enable cross-file analysis and Pro rules for free at <a href='https://sg.run/pro'>sg.run/pro</a>\n\n<b>References:</b>\n - [Semgrep Rule](https://semgrep.dev/r/go.lang.security.decompression_bomb.potential-dos-via-decompression-bomb)\n - [https://golang.org/pkg/io/#CopyN](https://golang.org/pkg/io/#CopyN)\n - [https://github.com/securego/gosec/blob/master/rules/decompression-bomb.go](https://github.com/securego/gosec/blob/master/rules/decompression-bomb.go)\n",
+                "text": "Detected a possible denial-of-service via a zip bomb attack. By limiting the max bytes read, you can mitigate this attack. `io.CopyN()` can specify a size. \n\ud83d\udc8e Enable cross-file analysis and Pro rules for free at sg.run/pro"
+              },
+              "helpUri": "https://semgrep.dev/r/go.lang.security.decompression_bomb.potential-dos-via-decompression-bomb",
+              "id": "go.lang.security.decompression_bomb.potential-dos-via-decompression-bomb",
+              "name": "go.lang.security.decompression_bomb.potential-dos-via-decompression-bomb",
+              "properties": {
+                "precision": "very-high",
+                "tags": [
+                  "CWE-400: Uncontrolled Resource Consumption",
+                  "LOW CONFIDENCE",
+                  "security"
+                ]
+              },
+              "shortDescription": {
+                "text": "Semgrep Finding: go.lang.security.decompression_bomb.potential-dos-via-decompression-bomb"
+              }
+            },
+            {
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "fullDescription": {
+                "text": "Checks for disabling of TLS/SSL certificate verification. This should only be used for debugging purposes because it leads to vulnerability to MTM attacks."
+              },
+              "help": {
+                "markdown": "Checks for disabling of TLS/SSL certificate verification. This should only be used for debugging purposes because it leads to vulnerability to MTM attacks.\n\n#### \ud83d\udc8e Enable cross-file analysis and Pro rules for free at <a href='https://sg.run/pro'>sg.run/pro</a>\n\n<b>References:</b>\n - [Semgrep Rule](https://semgrep.dev/r/problem-based-packs.insecure-transport.go-stdlib.bypass-tls-verification.bypass-tls-verification)\n - [https://stackoverflow.com/questions/12122159/how-to-do-a-https-request-with-bad-certificate](https://stackoverflow.com/questions/12122159/how-to-do-a-https-request-with-bad-certificate)\n",
+                "text": "Checks for disabling of TLS/SSL certificate verification. This should only be used for debugging purposes because it leads to vulnerability to MTM attacks.\n\ud83d\udc8e Enable cross-file analysis and Pro rules for free at sg.run/pro"
+              },
+              "helpUri": "https://semgrep.dev/r/problem-based-packs.insecure-transport.go-stdlib.bypass-tls-verification.bypass-tls-verification",
+              "id": "problem-based-packs.insecure-transport.go-stdlib.bypass-tls-verification.bypass-tls-verification",
+              "name": "problem-based-packs.insecure-transport.go-stdlib.bypass-tls-verification.bypass-tls-verification",
+              "properties": {
+                "precision": "very-high",
+                "tags": [
+                  "CWE-319: Cleartext Transmission of Sensitive Information",
+                  "MEDIUM CONFIDENCE",
+                  "OWASP-A03:2017 - Sensitive Data Exposure",
+                  "security"
+                ]
+              },
+              "shortDescription": {
+                "text": "Semgrep Finding: problem-based-packs.insecure-transport.go-stdlib.bypass-tls-verification.bypass-tls-verification"
+              }
+            },
+            {
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "fullDescription": {
+                "text": "Found 'subprocess' function '$FUNC' with 'shell=True'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use 'shell=False' instead."
+              },
+              "help": {
+                "markdown": "Found 'subprocess' function '$FUNC' with 'shell=True'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use 'shell=False' instead.\n\n#### \ud83d\udc8e Enable cross-file analysis and Pro rules for free at <a href='https://sg.run/pro'>sg.run/pro</a>\n\n<b>References:</b>\n - [Semgrep Rule](https://semgrep.dev/r/python.lang.security.audit.subprocess-shell-true.subprocess-shell-true)\n - [https://stackoverflow.com/questions/3172470/actual-meaning-of-shell-true-in-subprocess](https://stackoverflow.com/questions/3172470/actual-meaning-of-shell-true-in-subprocess)\n - [https://docs.python.org/3/library/subprocess.html](https://docs.python.org/3/library/subprocess.html)\n",
+                "text": "Found 'subprocess' function '$FUNC' with 'shell=True'. This is dangerous because this call will spawn the command using a shell process. Doing so propagates current shell settings and variables, which makes it much easier for a malicious actor to execute commands. Use 'shell=False' instead.\n\ud83d\udc8e Enable cross-file analysis and Pro rules for free at sg.run/pro"
+              },
+              "helpUri": "https://semgrep.dev/r/python.lang.security.audit.subprocess-shell-true.subprocess-shell-true",
+              "id": "python.lang.security.audit.subprocess-shell-true.subprocess-shell-true",
+              "name": "python.lang.security.audit.subprocess-shell-true.subprocess-shell-true",
+              "properties": {
+                "precision": "very-high",
+                "tags": [
+                  "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
+                  "MEDIUM CONFIDENCE",
+                  "OWASP-A01:2017 - Injection",
+                  "OWASP-A03:2021 - Injection",
+                  "security"
+                ]
+              },
+              "shortDescription": {
+                "text": "Semgrep Finding: python.lang.security.audit.subprocess-shell-true.subprocess-shell-true"
+              }
+            }
+          ],
+          "semanticVersion": "1.101.0"
+        }
+      }
+    }
+  ],
+  "$schema": "https://docs.oasis-open.org/sarif/sarif/v2.1.0/os/schemas/sarif-schema-2.1.0.json"
+}

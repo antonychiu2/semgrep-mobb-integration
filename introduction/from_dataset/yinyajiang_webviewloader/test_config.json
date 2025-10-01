@@ -1,0 +1,29 @@
+{
+  "dataset": "yinyajiang/webviewloader",
+  "no_fix": [
+    [
+      "SEMGREP",
+      7,
+      "no support for 'str {}'.format()"
+    ],
+    [
+      "SEMGREP",
+      11,
+      "we don't know the type of `args.win_sign`"
+    ]
+  ],
+  "tests": [
+    [
+      "SEMGREP",
+      6
+    ],
+    [
+      "SEMGREP",
+      8
+    ],
+    [
+      "SEMGREP",
+      10
+    ]
+  ]
+}

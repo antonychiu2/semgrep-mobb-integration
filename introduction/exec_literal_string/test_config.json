@@ -1,0 +1,8 @@
+{
+  "false_positive": [
+    ["DATADOG", 0],
+    ["DATADOG", 1],
+    ["DATADOG", 2],
+    ["DATADOG", 3]
+  ]
+}

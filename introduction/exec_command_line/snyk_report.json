@@ -1,0 +1,1242 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "SnykCode",
+          "semanticVersion": "1.0.0",
+          "version": "1.0.0",
+          "rules": [
+            {
+              "id": "python/CodeInjection",
+              "name": "CodeInjection",
+              "shortDescription": {
+                "text": "Code Injection"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "markdown": "## Details\n\nA secure code injection attack occurs when the attacker exploits an existing input processing vulnerability, passing special characters and code directly to a web-based application or site. The code is then executed, potentially granting the user system access to export sensitive data, to install malware, or even to move laterally and to exploit other systems in the trusted internal network environment. While code injection attacks can take place in several ways, the common factor is allowing the user to submit executable code to the application. The most common forms of code injection are SQL injection (server side) and cross-site scripting (XSS) (client side).\n\n## Best practices for prevention\n- Never trust user input. Assume any input may transmit harmful values.\n- Apply least privilege principle (for example, limit users to read only wherever possible).\n- Avoid passing raw user input directly to functions; use parameterized queries to extract data first.\n- Sanitize user input strings of special characters such as ?, &, /, <, >, and quotation marks.\n- Use whitelisting of known good values.\n- Validate user input against expected response types.\n- Escape shell commands with functions such as shlex for Python, or escapeshellarg for PHP.\n- Remember that code injection can take place on multiple fronts: GET and POST requests, but also cookies and HTTP headers.\n- Ensure up-to-date patching across all systems to remediate known vulnerabilities so these cannot be exploited by code injection.\n- Educate all team members on safe data handling procedures to prevent attacks.",
+                "text": ""
+              },
+              "properties": {
+                "tags": [
+                  "python",
+                  "CodeInjection",
+                  "Security",
+                  "SourceNonServer",
+                  "SourceLocalEnv",
+                  "SourceCLI",
+                  "Taint"
+                ],
+                "categories": [
+                  "Security"
+                ],
+                "exampleCommitFixes": [
+                  {
+                    "commitURL": "https://github.com/spectralDNS/shenfun/commit/16475f2baf898134032dbdd155dd0a563312eff0?diff=split#diff-fb6da554a7c1e9794c48fc606ab31338fabdcc929700fc2e15d28570af157e58L-1",
+                    "lines": [
+                      {
+                        "line": "assert isinstance(eval(sys.argv[-2]), int)\n",
+                        "lineNumber": 23,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "assert isinstance(int(sys.argv[-2]), int)\n",
+                        "lineNumber": 23,
+                        "lineChange": "added"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/nextml/NEXT/commit/b0b770405772329dac83ddfdd870ffbbd6a33c4a?diff=split#diff-98933f824249bbc1f6ec89f094e9077caeb5921ae009aa42feb4d2b8d90f7ccfL-1",
+                    "lines": [
+                      {
+                        "line": "        true_values ={1, '1', 'True', 'true'}\n",
+                        "lineNumber": 87,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "        zip_true = False\n",
+                        "lineNumber": 88,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "        if request.args.get('zip'):\n",
+                        "lineNumber": 88,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "            try:\n",
+                        "lineNumber": 89,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                zip_true = eval(request.args.get('zip'))\n",
+                        "lineNumber": 90,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "            except:\n",
+                        "lineNumber": 91,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "                pass\n",
+                        "lineNumber": 92,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "\n",
+                        "lineNumber": 93,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "        if 'zip' in request.args.keys():\n",
+                        "lineNumber": 89,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "            zip_true = True if request.args.get('zip') in true_values else False\n",
+                        "lineNumber": 90,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "        csv = False\n",
+                        "lineNumber": 91,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "        if 'csv' in request.args.keys():\n",
+                        "lineNumber": 92,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "            csv = True if request.args.get('csv') in true_values else False\n",
+                        "lineNumber": 93,
+                        "lineChange": "added"
+                      }
+                    ]
+                  },
+                  {
+                    "commitURL": "https://github.com/naftaliharris/tauthon/commit/4ce126b887212da704b2fe4cf7a22322b48d45bd?diff=split#diff-b989b2f4ba160af991a115642288da4f6cc1bc6e98ead4bf36cf2b8cc235a41fL-1",
+                    "lines": [
+                      {
+                        "line": "\tyear = eval(sys.argv[1])\n",
+                        "lineNumber": 16,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    year = int(sys.argv[1])\n",
+                        "lineNumber": 16,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "else:\n",
+                        "lineNumber": 17,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tyear = input('In which year were you born? ')\n",
+                        "lineNumber": 18,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "if year in range(100):\n",
+                        "lineNumber": 19,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tprint 'I\\'ll assume that by', year,\n",
+                        "lineNumber": 20,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    year = year + 1900\n",
+                        "lineNumber": 21,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    print 'you mean', year, 'and not the early Christian era'\n",
+                        "lineNumber": 22,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "elif year not in range(1850, 2000):\n",
+                        "lineNumber": 23,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tprint 'It\\'s hard to believe you were born in', year\n",
+                        "lineNumber": 24,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    return\n",
+                        "lineNumber": 25,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "#\n",
+                        "lineNumber": 26,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "if sys.argv[2:]:\n",
+                        "lineNumber": 27,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tmonth = eval(sys.argv[2])\n",
+                        "lineNumber": 28,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    month = int(sys.argv[2])\n",
+                        "lineNumber": 28,
+                        "lineChange": "added"
+                      },
+                      {
+                        "line": "else:\n",
+                        "lineNumber": 29,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tmonth = input('And in which month? (1-12) ')\n",
+                        "lineNumber": 30,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "if month not in range(1, 13):\n",
+                        "lineNumber": 31,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    print 'There is no month numbered', month\n",
+                        "lineNumber": 32,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "    return\n",
+                        "lineNumber": 33,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "#\n",
+                        "lineNumber": 34,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "if sys.argv[3:]:\n",
+                        "lineNumber": 35,
+                        "lineChange": "none"
+                      },
+                      {
+                        "line": "\tday = eval(sys.argv[3])\n",
+                        "lineNumber": 36,
+                        "lineChange": "removed"
+                      },
+                      {
+                        "line": "    day = int(sys.argv[3])\n",
+                        "lineNumber": 36,
+                        "lineChange": "added"
+                      }
+                    ]
+                  }
+                ],
+                "exampleCommitDescriptions": [],
+                "precision": "very-high",
+                "repoDatasetSize": 69,
+                "cwe": [
+                  "CWE-94"
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "python/CodeInjection",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Unsanitized input from a command line argument flows into exec, where it is executed as Python code. This may result in a Code Injection vulnerability.",
+            "markdown": "Unsanitized input from {0} {1} into {2}, where it is executed as Python code. This may result in a Code Injection vulnerability.",
+            "arguments": [
+              "[a command line argument](0)",
+              "[flows](1),(2),(3)",
+              "[exec](4)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 11,
+                  "endLine": 11,
+                  "startColumn": 9,
+                  "endColumn": 13
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "c1a6dc28910fa3d985dc79a8004f5dfd0f1d78ab664349fb49ab66f39f47b381",
+            "1": "a6b41d6e.2451659c.79e62dc9.139c59a8.1d07cee4.ba14daf2.a2237efa.f46ed94e.a6b41d6e.b377bf81.d4fa07ba.bbb1b7ed.c8b7d5cc.ba14daf2.a2237efa.f46ed94e"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 10,
+                            "endLine": 10,
+                            "startColumn": 27,
+                            "endColumn": 35
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 10,
+                            "endLine": 10,
+                            "startColumn": 27,
+                            "endColumn": 35
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 10,
+                            "endLine": 10,
+                            "startColumn": 27,
+                            "endColumn": 38
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 3,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 11,
+                            "endLine": 11,
+                            "startColumn": 14,
+                            "endColumn": 29
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 4,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 11,
+                            "endLine": 11,
+                            "startColumn": 9,
+                            "endColumn": 13
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 650,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ],
+            "isAutofixable": true
+          }
+        },
+        {
+          "ruleId": "python/CodeInjection",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Unsanitized input from a command line argument flows into exec, where it is executed as Python code. This may result in a Code Injection vulnerability.",
+            "markdown": "Unsanitized input from {0} {1} into {2}, where it is executed as Python code. This may result in a Code Injection vulnerability.",
+            "arguments": [
+              "[a command line argument](0)",
+              "[flows](1),(2),(3),(4)",
+              "[exec](5)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 23,
+                  "endLine": 23,
+                  "startColumn": 9,
+                  "endColumn": 13
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "ca80a55d1b32ece441e55c8091c69aa81e420a811d0e3dbf07e6855d8b0b9802",
+            "1": "60fdd424.e3d9b656.79e62dc9.139c59a8.1c977921.ba14daf2.081ac3f4.ebed174f.9eb2338f.e3d9b656.e6e72a62.9cd2dfe0.1c977921.0a892d8d.f6dc7859.742d9b21"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 20,
+                            "endLine": 20,
+                            "startColumn": 12,
+                            "endColumn": 29
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 20,
+                            "endLine": 20,
+                            "startColumn": 12,
+                            "endColumn": 29
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 22,
+                            "endLine": 22,
+                            "startColumn": 8,
+                            "endColumn": 12
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 3,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 22,
+                            "endLine": 22,
+                            "startColumn": 8,
+                            "endColumn": 17
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 4,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 23,
+                            "endLine": 23,
+                            "startColumn": 14,
+                            "endColumn": 23
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 5,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 23,
+                            "endLine": 23,
+                            "startColumn": 9,
+                            "endColumn": 13
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 650,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ],
+            "isAutofixable": true
+          }
+        },
+        {
+          "ruleId": "python/CodeInjection",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Unsanitized input from a command line argument flows into exec, where it is executed as Python code. This may result in a Code Injection vulnerability.",
+            "markdown": "Unsanitized input from {0} {1} into {2}, where it is executed as Python code. This may result in a Code Injection vulnerability.",
+            "arguments": [
+              "[a command line argument](0)",
+              "[flows](1),(2),(3),(4),(5)",
+              "[exec](6)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 26,
+                  "endLine": 26,
+                  "startColumn": 9,
+                  "endColumn": 13
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "51b59cab48b0b7a3986d0ee3304e07ffe87d16397090f01cc9a5e3bfc1e351c7",
+            "1": "9eb2338f.e3d9b656.2683ade8.139c59a8.cc857d4e.ba14daf2.081ac3f4.b60afa86.9eb2338f.e3d9b656.79e62dc9.b5f6ec27.1c977921.ba14daf2.75d4ed92.4e196da9"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 20,
+                            "endLine": 20,
+                            "startColumn": 12,
+                            "endColumn": 29
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 20,
+                            "endLine": 20,
+                            "startColumn": 12,
+                            "endColumn": 29
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 25,
+                            "endLine": 25,
+                            "startColumn": 8,
+                            "endColumn": 12
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 3,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 25,
+                            "endLine": 25,
+                            "startColumn": 8,
+                            "endColumn": 23
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 4,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 26,
+                            "endLine": 26,
+                            "startColumn": 26,
+                            "endColumn": 41
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 5,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 26,
+                            "endLine": 26,
+                            "startColumn": 14,
+                            "endColumn": 43
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 6,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 26,
+                            "endLine": 26,
+                            "startColumn": 9,
+                            "endColumn": 13
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 650,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ],
+            "isAutofixable": true
+          }
+        },
+        {
+          "ruleId": "python/CodeInjection",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Unsanitized input from a command line argument flows into exec, where it is executed as Python code. This may result in a Code Injection vulnerability.",
+            "markdown": "Unsanitized input from {0} {1} into {2}, where it is executed as Python code. This may result in a Code Injection vulnerability.",
+            "arguments": [
+              "[a command line argument](0)",
+              "[flows](1),(2),(3),(4)",
+              "[exec](5)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 34,
+                  "endLine": 34,
+                  "startColumn": 9,
+                  "endColumn": 13
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "3271c859857a234957e8bd7e7a8f0dc0322ae677fe181c0a2cebf74e8b0b2cee",
+            "1": "316df93a.ecc4e7fd.5604ac65.a9e743d3.e44e2ee1.ba14daf2.75d4ed92.b60afa86.a6b41d6e.6c22c788.59612bde.139c59a8.c8b7d5cc.ba14daf2.a2237efa.f46ed94e"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 32,
+                            "endLine": 32,
+                            "startColumn": 16,
+                            "endColumn": 24
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 32,
+                            "endLine": 32,
+                            "startColumn": 16,
+                            "endColumn": 24
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 32,
+                            "endLine": 32,
+                            "startColumn": 16,
+                            "endColumn": 28
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 3,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 32,
+                            "endLine": 32,
+                            "startColumn": 9,
+                            "endColumn": 12
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 4,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 34,
+                            "endLine": 34,
+                            "startColumn": 14,
+                            "endColumn": 17
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 5,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 34,
+                            "endLine": 34,
+                            "startColumn": 9,
+                            "endColumn": 13
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 650,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ],
+            "isAutofixable": true
+          }
+        },
+        {
+          "ruleId": "python/CodeInjection",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Unsanitized input from a command line argument flows into exec, where it is executed as Python code. This may result in a Code Injection vulnerability.",
+            "markdown": "Unsanitized input from {0} {1} into {2}, where it is executed as Python code. This may result in a Code Injection vulnerability.",
+            "arguments": [
+              "[a command line argument](0)",
+              "[flows](1),(2),(3)",
+              "[exec](4)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 43,
+                  "endLine": 43,
+                  "startColumn": 13,
+                  "endColumn": 17
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "ef07a814f21feb3be747cd1b365aa69e6d2044b3b64bd308d61dfec4ad7963e5",
+            "1": "a6b41d6e.1c6650e9.79e62dc9.139c59a8.1d07cee4.ba14daf2.a2237efa.f46ed94e.a6b41d6e.7651cd21.d4fa07ba.139c59a8.b9abe432.ba14daf2.a2237efa.f46ed94e"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 42,
+                            "endLine": 42,
+                            "startColumn": 20,
+                            "endColumn": 28
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 42,
+                            "endLine": 42,
+                            "startColumn": 20,
+                            "endColumn": 28
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 42,
+                            "endLine": 42,
+                            "startColumn": 20,
+                            "endColumn": 37
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 3,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 43,
+                            "endLine": 43,
+                            "startColumn": 18,
+                            "endColumn": 22
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 4,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 43,
+                            "endLine": 43,
+                            "startColumn": 13,
+                            "endColumn": 17
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 650,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ],
+            "isAutofixable": true
+          }
+        },
+        {
+          "ruleId": "python/CodeInjection",
+          "ruleIndex": 0,
+          "level": "warning",
+          "message": {
+            "text": "Unsanitized input from a command line argument flows into exec, where it is executed as Python code. This may result in a Code Injection vulnerability.",
+            "markdown": "Unsanitized input from {0} {1} into {2}, where it is executed as Python code. This may result in a Code Injection vulnerability.",
+            "arguments": [
+              "[a command line argument](0)",
+              "[flows](1),(2),(3),(4)",
+              "[exec](5)"
+            ]
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "main.py",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 48,
+                  "endLine": 48,
+                  "startColumn": 9,
+                  "endColumn": 13
+                }
+              }
+            }
+          ],
+          "fingerprints": {
+            "0": "ad4028a6070d08daa458ee3302598995077acdb21c5cb25e76ce87694704880c",
+            "1": "26f1400e.1c6650e9.79e62dc9.a9e743d3.1d07cee4.28b63728.5c01a3e2.612d410f.a6b41d6e.67df6de4.59612bde.139c59a8.c8b7d5cc.28b63728.a2237efa.f46ed94e"
+          },
+          "codeFlows": [
+            {
+              "threadFlows": [
+                {
+                  "locations": [
+                    {
+                      "location": {
+                        "id": 0,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 46,
+                            "endLine": 46,
+                            "startColumn": 25,
+                            "endColumn": 33
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 1,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 46,
+                            "endLine": 46,
+                            "startColumn": 25,
+                            "endColumn": 33
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 2,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 46,
+                            "endLine": 46,
+                            "startColumn": 25,
+                            "endColumn": 37
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 3,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 46,
+                            "endLine": 46,
+                            "startColumn": 16,
+                            "endColumn": 24
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 4,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 48,
+                            "endLine": 48,
+                            "startColumn": 14,
+                            "endColumn": 22
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "location": {
+                        "id": 5,
+                        "physicalLocation": {
+                          "artifactLocation": {
+                            "uri": "main.py",
+                            "uriBaseId": "%SRCROOT%"
+                          },
+                          "region": {
+                            "startLine": 48,
+                            "endLine": 48,
+                            "startColumn": 9,
+                            "endColumn": 13
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "properties": {
+            "priorityScore": 650,
+            "priorityScoreFactors": [
+              {
+                "label": true,
+                "type": "multipleOccurrence"
+              },
+              {
+                "label": true,
+                "type": "hotFileSource"
+              },
+              {
+                "label": true,
+                "type": "fixExamples"
+              }
+            ],
+            "isAutofixable": true
+          }
+        }
+      ],
+      "properties": {
+        "coverage": [
+          {
+            "isSupported": true,
+            "lang": "Python",
+            "files": 1,
+            "type": "SUPPORTED"
+          }
+        ]
+      }
+    }
+  ]
+}

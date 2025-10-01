@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CxXMLResults InitiatorName="Mobb Dev" Owner="mobb.dev" ScanId="1052167" ProjectId="4905" ProjectName="kirill-test" TeamFullPathOnReportDate="CxServer\Mobb" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052167&amp;projectid=4905" ScanStart="Wednesday, July 16, 2025 11:42:28 AM" Preset="All" ScanTime="00h:00m:24s" LinesOfCodeScanned="65" FilesScanned="1" ReportCreationTime="Wednesday, July 16, 2025 11:43:03 AM" Team="Mobb" CheckmarxVersion="9.7.1.1001 HF2" ScanComments="" ScanType="Full" SourceOrigin="LocalPath" Visibility="Private">
+  <QueriesMetaData>
+    <QueryMetaData queryId="6685">
+      <QueryDescription id="2242">
+        <ResultDescription>&lt;p&gt;The application's @DestinationMethod method calls an OS (shell) command with @DestinationElement, at line @DestinationLine of @DestinationFile, using an untrusted string with the command to execute. &amp;nbsp;&lt;/p&gt;&lt;p&gt;This could allow an attacker to inject an arbitrary command, and enable a Command Injection attack.&lt;/p&gt;&lt;p&gt;The attacker may be able to inject the executed command into the database, which is then retrieved by the application with @SourceElement, at line @SourceLine of @SourceFile, in the @SourceMethod method.&lt;/p&gt;</ResultDescription>
+        <BestFixLocation></BestFixLocation>
+        <Risk>&lt;p&gt;An attacker could run arbitrary system-level OS commands on the application server host. Depending on the application’s OS permissions, these could include:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;File actions (read / create / modify / delete)&lt;/li&gt;&lt;li&gt;Open a network connection to the attacker’s server&lt;/li&gt;&lt;li&gt;Start and stop system services&lt;/li&gt;&lt;li&gt;Modify the running application&lt;/li&gt;&lt;li&gt;Complete server takeover&lt;/li&gt;&lt;/ul&gt;</Risk>
+        <Cause>&lt;p&gt;The application runs an OS system-level command to complete it's task, rather than via the application code. The command includes untrusted data, that may be controllable by an attacker. This untrusted string may contain malicious system-level commands engineered by an attacker, which could be executed as though the attacker were running commands directly on the application server.&lt;/p&gt;&lt;p&gt;In this case, the application reads the command from the database, and passes it as a string to the Operating System. The attacker may be able to load the malicious payload into the database fields beforehand, causing the application to load that command.&amp;nbsp;This unvalidated data is then executed by the OS as a system command, running with the same system privileges as the application.&lt;/p&gt;</Cause>
+        <GeneralRecommendations>&lt;ul&gt;&lt;li&gt;Refactor the code to avoid any direct shell command execution. Instead, use platform provided APIs or library calls.&lt;/li&gt;&lt;li&gt;If it is impossible to remove the command execution, execute only static commands that do not include dynamic, user-controlled data.&lt;/li&gt;&lt;li&gt;Validate all input, regardless of source. Validation should be based on a whitelist: accept only data fitting a specified format, rather than rejecting bad patterns (blacklist). Parameters should be limited to an allowed character set, and non-validated input should be dropped. In addition to characters, check for:&lt;ul&gt;&lt;li&gt;Data type&lt;/li&gt;&lt;li&gt;Size&lt;/li&gt;&lt;li&gt;Range&lt;/li&gt;&lt;li&gt;Format&lt;/li&gt;&lt;li&gt;Expected values&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;li&gt;In order to minimize damage as a measure of defense in depth, configure the application to run using a restricted user account that has no unnecessary OS privileges.&lt;/li&gt;&lt;li&gt;If possible, isolate all OS commands to use a separate dedicated user account that has minimal privileges only for the specific commands and files used by the application, according to the Principle of Least Privilege.&lt;/li&gt;&lt;/ul&gt;</GeneralRecommendations>
+        <SourceCodeExamples>
+          <SourceCodeExample SourceLanguage="Python" Title="Execute OS Commands From DB Without Validation">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;runCommand&lt;/span&gt;&lt;span class="hljs-params"&gt;(request)&lt;/span&gt;:&lt;/span&gt;
+    num = request.GET[&lt;span class="hljs-string"&gt;'index'&lt;/span&gt;]
+    cmd = Command.objects().get(pk=num)
+    cmd_val = getattr(cmd, &lt;span class="hljs-string"&gt;'command'&lt;/span&gt;) 
+    res = os.system(cmd_val)
+    &lt;span class="hljs-keyword"&gt;return&lt;/span&gt; HttpResponse(res)&lt;/pre&gt;</SourceCodeExample>
+        </SourceCodeExamples>
+      </QueryDescription>
+    </QueryMetaData>
+    <QueryMetaData queryId="5618">
+      <QueryDescription id="1545">
+        <ResultDescription>&lt;p&gt;The application's&amp;nbsp;@DestinationMethod method receives and&amp;nbsp;dynamically executes user-controlled code using&amp;nbsp;@DestinationElement,&amp;nbsp;at line @DestinationLine of @DestinationFile. This could enable an attacker to inject and run arbitrary code.&lt;/p&gt;&lt;p&gt;The attacker can inject the executed code by inserting the payload in standard text fields in the database or a local file. This text is retrieved by&amp;nbsp;the @SourceMethod method, using&amp;nbsp;@SourceElement, at line @SourceLine of @SourceFile, and then sent to the executing method.&lt;/p&gt;</ResultDescription>
+        <BestFixLocation></BestFixLocation>
+        <Risk>&lt;p&gt;An attacker could run arbitrary code on the application server host. Depending on the application’s OS permissions,these could include:&lt;/p&gt;&lt;ul&gt;&lt;li&gt;Database access, such as reading or modifying sensitive data;&lt;/li&gt;&lt;li&gt;File actions (read / create / modify / delete);&lt;/li&gt;&lt;li&gt;Changing the website;&lt;/li&gt;&lt;li&gt;Open a network connection to the attacker’s server;&lt;/li&gt;&lt;li&gt;Decrypt secret data using the application's encryption keys;&amp;nbsp;&lt;/li&gt;&lt;li&gt;Start and stop system services;&lt;/li&gt;&lt;li&gt;Complete server takeover.&lt;/li&gt;&lt;/ul&gt;</Risk>
+        <Cause>&lt;p&gt;The application performs some action by creating and running code that includes untrusted data, which might be under control of a malicious user. If the data contains malicious code, the executed code could contain system-level activities engineered by an attacker, as though the attacker were running code directly on the application server.&lt;/p&gt;</Cause>
+        <GeneralRecommendations>&lt;ul&gt;&lt;li&gt;The application should not compile, execute, or evaluate any untrusted code from any external source, including user input, uploaded files, or a database. &lt;/li&gt;&lt;li&gt;If it is absolutely necessary to include external data in dynamic execution, it is permissible to pass the data as parameters to the code, but do not execute user data directly.  &lt;/li&gt;&lt;li&gt;If it is necessary to pass untrusted data to dynamic execution, enforce very strict data validation. For example, accept only integers between certain values.&lt;/li&gt;&lt;li&gt;Validate all input, regardless of source. Validation should be based on a whitelist: accept only data fitting a specified structure, rather than reject bad patterns. Parameters should be limited to an allowed character set, and non-validated input should be dropped. In addition to characters, check for:&lt;ul&gt;&lt;li&gt;Data type&lt;/li&gt;&lt;li&gt;Size&lt;/li&gt;&lt;li&gt;Range&lt;/li&gt;&lt;li&gt;Format&lt;/li&gt;&lt;li&gt;Expected values&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;li&gt;If possible, always prefer to whitelist known and trusted input instead of comparing to a blacklist.&lt;/li&gt;&lt;li&gt;Configure the application to run using a restricted user account that has no unnecessary privileges.&lt;/li&gt;&lt;li&gt;If possible, isolate all dynamic execution to use a separate, dedicated user account that has privileges only for the specific operations and files used by dynamic execution, according to the Principle of Least Privilege.&lt;/li&gt;&lt;/ul&gt;</GeneralRecommendations>
+        <SourceCodeExamples>
+          <SourceCodeExample SourceLanguage="Python" Title="Dynamically Execute User Code">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-meta"&gt;@app.route('/executefromstorage')&lt;/span&gt;
+&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;execute_from_file_unsafe&lt;/span&gt;&lt;span class="hljs-params"&gt;(filename)&lt;/span&gt;:&lt;/span&gt; 
+    stored_code = read_from_file(filename)
+	result = eval(stored_code)
+	
+	&lt;span class="hljs-keyword"&gt;return&lt;/span&gt; result[&lt;span class="hljs-string"&gt;'value'&lt;/span&gt;]&lt;/pre&gt;</SourceCodeExample>
+          <SourceCodeExample SourceLanguage="Python" Title="Safely Parse User's Literals">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-meta"&gt;@app.route('/executefromstorage')&lt;/span&gt;
+&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;execute_from_file&lt;/span&gt;&lt;span class="hljs-params"&gt;(filename)&lt;/span&gt;:&lt;/span&gt; 
+    stored_code = read_from_file(filename)
+	result = ast.literal_eval(stored_code)
+	
+	&lt;span class="hljs-keyword"&gt;return&lt;/span&gt; result[&lt;span class="hljs-string"&gt;'value'&lt;/span&gt;]&lt;/pre&gt;</SourceCodeExample>
+        </SourceCodeExamples>
+      </QueryDescription>
+    </QueryMetaData>
+    <QueryMetaData queryId="6715">
+      <QueryDescription id="2455">
+        <ResultDescription>&lt;p&gt;An argument is passed to an external OS command by @DestinationElement at @DestinationFile in line @DestinationLine. This could allow an attacker to attack the external program by injecting malicious arguments into its execution.&lt;/p&gt;&lt;p&gt;The attacker may be able to inject a command or argument to execute into storage, which is then retrieved by the application with @SourceElement, at line @SourceLine of @SourceFile, in the @SourceMethod method.&lt;/p&gt;</ResultDescription>
+        <BestFixLocation></BestFixLocation>
+        <Risk>&lt;p&gt;The impact of an attacker-controlled argument passed to an external program depends on the functionality, capability, implementation and permissions granted to this program. Invoking a program that allows OS commands may allow command injection, an external compiler or interpreter may allow for code injection or a file path can be manipulated to allow path traversal. In other cases, the external program may itself be vulnerable to attack, such as a buffer overflow.&lt;/p&gt;</Risk>
+        <Cause>&lt;p&gt;A potentially tainted value is passed as an argument to an external program, which is executed by code.&lt;/p&gt;</Cause>
+        <GeneralRecommendations>&lt;ul&gt;&lt;li&gt;Refactor the code to avoid any direct shell command execution. Instead, use platform provided APIs or library calls.&lt;/li&gt;&lt;li&gt;If it is impossible to remove the command execution, execute only static commands that do not include dynamic, user-controlled data.&lt;/li&gt;&lt;li&gt;Validate all input, regardless of source. Validation should be based on a whitelist: accept only data fitting a specified format, rather than rejecting bad patterns (blacklist). Parameters should be limited to an allowed character set, and non-validated input should be dropped. In addition to characters, check for:&lt;ul&gt;&lt;li&gt;Data type&lt;/li&gt;&lt;li&gt;Size&lt;/li&gt;&lt;li&gt;Range&lt;/li&gt;&lt;li&gt;Format&lt;/li&gt;&lt;li&gt;Expected values&lt;/li&gt;&lt;/ul&gt;&lt;/li&gt;&lt;li&gt;In order to minimize damage as a measure of defense in depth, configure the application to run using a restricted user account that has no unnecessary OS privileges.&lt;/li&gt;&lt;li&gt;If possible, isolate all OS commands to use a separate dedicated user account that has minimal privileges only for the specific commands and files used by the application, according to the Principle of Least Privilege.&lt;/li&gt;&lt;/ul&gt;</GeneralRecommendations>
+        <SourceCodeExamples>
+          <SourceCodeExample SourceLanguage="Python" Title="Execute a File By ID From User Input">&lt;style&gt;.hljs{font-family:Courier New;font-size:12px;display:block;overflow-x:auto;padding:.5em;color:#333;background:#f8f8f8;-webkit-text-size-adjust:none;border:1px solid #888}.diff .hljs-header,.hljs-comment,.hljs-javadoc{color:#998;font-style:italic}.css .rule .hljs-keyword,.hljs-keyword,.hljs-request,.hljs-status,.hljs-subst,.hljs-winutils,.nginx .hljs-title{color:#333;font-weight:700}.hljs-hexcolor,.hljs-number,.ruby .hljs-constant{color:teal}.hljs-dartdoc,.hljs-phpdoc,.hljs-string,.hljs-tag .hljs-value,.tex .hljs-formula{color:#d14}.hljs-id,.hljs-title,.scss .hljs-preprocessor{color:#900;font-weight:700}.hljs-list .hljs-keyword,.hljs-subst{font-weight:400}.hljs-class .hljs-title,.hljs-type,.tex .hljs-command,.vhdl .hljs-literal{color:#458;font-weight:700}.django .hljs-tag .hljs-keyword,.hljs-rule .hljs-property,.hljs-tag,.hljs-tag .hljs-title{color:navy;font-weight:400}.hljs-attribute,.hljs-name,.hljs-variable,.lisp .hljs-body{color:teal}.hljs-regexp{color:#009926}.clojure .hljs-keyword,.hljs-prompt,.hljs-symbol,.lisp .hljs-keyword,.ruby .hljs-symbol .hljs-string,.scheme .hljs-keyword,.tex .hljs-special{color:#990073}.hljs-built_in{color:#0086b3}.hljs-cdata,.hljs-doctype,.hljs-pi,.hljs-pragma,.hljs-preprocessor,.hljs-shebang{color:#999;font-weight:700}.hljs-deletion{background:#fdd}.hljs-addition{background:#dfd}.diff .hljs-change{background:#0086b3}.hljs-chunk{color:#aaa}&lt;/style&gt;&lt;pre class="hljs"&gt;&lt;span class="hljs-comment"&gt;# Django application &lt;/span&gt;
+
+&lt;span class="hljs-function"&gt;&lt;span class="hljs-keyword"&gt;def&lt;/span&gt; &lt;span class="hljs-title"&gt;exec_file&lt;/span&gt;&lt;span class="hljs-params"&gt;(request)&lt;/span&gt;:&lt;/span&gt;
+    num = request.GET[&lt;span class="hljs-string"&gt;'index'&lt;/span&gt;]
+    file = File.objects.get(pk=num)
+    filename = getattr(file, &lt;span class="hljs-string"&gt;'filename'&lt;/span&gt;) 
+    res = subprocess([EXTERNAL_EXECUTABLE, filename])
+    &lt;span class="hljs-keyword"&gt;return&lt;/span&gt; HttpResponse(res)&lt;/pre&gt;</SourceCodeExample>
+        </SourceCodeExamples>
+      </QueryDescription>
+    </QueryMetaData>
+  </QueriesMetaData>
+  <Query id="6685" categories="CWE top 25;CWE top 25,MOIS(KISA) Secure Coding 2021;MOIS(KISA) Verification and representation of input data,OWASP Top 10 2021;A3-Injection,PCI DSS v4.0;PCI DSS (4.0) - 6.2.4 Vulnerabilities in software development" cweId="77" name="Stored_Command_Injection" group="Python_Medium_Threat" Severity="Medium" Language="Python" LanguageHash="4737932861188015" LanguageChangeDate="2025-01-13T00:00:00.0000000" SeverityIndex="2" QueryPath="Python\Cx\Python Medium Threat\Stored Command Injection Version:5" QueryVersionCode="139296400">
+    <Result NodeId="10521670002" FileName="main.py" Status="New" Line="10" Column="23" FalsePositive="False" Severity="Medium" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052167&amp;projectid=4905&amp;pathid=2" SeverityIndex="2" StatusIndex="2" DetectionDate="7/16/2025 11:42:53 AM">
+      <Path ResultId="1052167" PathId="2" SimilarityId="-443353548" SourceMethod="process_config_file" DestinationMethod="process_config_file">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>10</Line>
+          <Column>23</Column>
+          <NodeId>1</NodeId>
+          <Name>load</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>10</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(config_path, 'r') as f:
+        config = json.load(f)
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>10</Line>
+          <Column>9</Column>
+          <NodeId>2</NodeId>
+          <Name>config</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>10</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(config_path, 'r') as f:
+        config = json.load(f)
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>12</Line>
+          <Column>27</Column>
+          <NodeId>3</NodeId>
+          <Name>config</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>12</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    initialization_code = config.get('init_code', '')
+    exec(initialization_code)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>12</Line>
+          <Column>34</Column>
+          <NodeId>4</NodeId>
+          <Name>get</Name>
+          <Type></Type>
+          <Length>3</Length>
+          <Snippet>
+            <Line>
+              <Number>12</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    initialization_code = config.get('init_code', '')
+    exec(initialization_code)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>12</Line>
+          <Column>5</Column>
+          <NodeId>5</NodeId>
+          <Name>initialization_code</Name>
+          <Type></Type>
+          <Length>19</Length>
+          <Snippet>
+            <Line>
+              <Number>12</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    initialization_code = config.get('init_code', '')
+    exec(initialization_code)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>13</Line>
+          <Column>10</Column>
+          <NodeId>6</NodeId>
+          <Name>initialization_code</Name>
+          <Type></Type>
+          <Length>19</Length>
+          <Snippet>
+            <Line>
+              <Number>13</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>initialization_code = config.get('init_code', '')
+    exec(initialization_code)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+  </Query>
+  <Query id="5618" categories="CWE top 25;CWE top 25,MOIS(KISA) Secure Coding 2021;MOIS(KISA) Verification and representation of input data,OWASP ASVS;V05 Validation, Sanitization and Encoding,OWASP Top 10 2021;A3-Injection,SANS top 25;SANS top 25,PCI DSS v4.0;PCI DSS (4.0) - 6.2.4 Vulnerabilities in software development" cweId="94" name="Stored_Code_Injection" group="Python_Low_Visibility" Severity="Low" Language="Python" LanguageHash="4737932861188015" LanguageChangeDate="2025-01-13T00:00:00.0000000" SeverityIndex="1" QueryPath="Python\Cx\Python Low Visibility\Stored Code Injection Version:3" QueryVersionCode="122025634">
+    <Result NodeId="10521670001" FileName="main.py" Status="New" Line="10" Column="23" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052167&amp;projectid=4905&amp;pathid=1" SeverityIndex="1" StatusIndex="2" DetectionDate="7/16/2025 11:42:53 AM">
+      <Path ResultId="1052167" PathId="1" SimilarityId="-443383553" SourceMethod="process_config_file" DestinationMethod="process_config_file">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>10</Line>
+          <Column>23</Column>
+          <NodeId>1</NodeId>
+          <Name>load</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>10</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(config_path, 'r') as f:
+        config = json.load(f)
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>10</Line>
+          <Column>9</Column>
+          <NodeId>2</NodeId>
+          <Name>config</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>10</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(config_path, 'r') as f:
+        config = json.load(f)
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>12</Line>
+          <Column>27</Column>
+          <NodeId>3</NodeId>
+          <Name>config</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>12</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    initialization_code = config.get('init_code', '')
+    exec(initialization_code)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>12</Line>
+          <Column>34</Column>
+          <NodeId>4</NodeId>
+          <Name>get</Name>
+          <Type></Type>
+          <Length>3</Length>
+          <Snippet>
+            <Line>
+              <Number>12</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    initialization_code = config.get('init_code', '')
+    exec(initialization_code)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>12</Line>
+          <Column>5</Column>
+          <NodeId>5</NodeId>
+          <Name>initialization_code</Name>
+          <Type></Type>
+          <Length>19</Length>
+          <Snippet>
+            <Line>
+              <Number>12</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    initialization_code = config.get('init_code', '')
+    exec(initialization_code)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>13</Line>
+          <Column>10</Column>
+          <NodeId>6</NodeId>
+          <Name>initialization_code</Name>
+          <Type></Type>
+          <Length>19</Length>
+          <Snippet>
+            <Line>
+              <Number>13</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>initialization_code = config.get('init_code', '')
+    exec(initialization_code)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>13</Line>
+          <Column>5</Column>
+          <NodeId>7</NodeId>
+          <Name>exec</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>13</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>initialization_code = config.get('init_code', '')
+    exec(initialization_code)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+  </Query>
+  <Query id="6715" categories="CWE top 25;CWE top 25,MOIS(KISA) Secure Coding 2021;MOIS(KISA) Verification and representation of input data,OWASP ASVS;V05 Validation, Sanitization and Encoding,OWASP Top 10 2021;A3-Injection,SANS top 25;SANS top 25" cweId="88" name="Stored_Command_Argument_Injection" group="Python_Low_Visibility" Severity="Low" Language="Python" LanguageHash="4737932861188015" LanguageChangeDate="2025-01-13T00:00:00.0000000" SeverityIndex="1" QueryPath="Python\Cx\Python Low Visibility\Stored Command Argument Injection Version:2" QueryVersionCode="139747405">
+    <Result NodeId="10521670003" FileName="main.py" Status="New" Line="9" Column="36" FalsePositive="False" Severity="Low" AssignToUser="" state="0" Remark="" DeepLink="https://partners9x.checkmarx.net/CxWebClient/ViewerMain.aspx?scanid=1052167&amp;projectid=4905&amp;pathid=3" SeverityIndex="1" StatusIndex="2" DetectionDate="7/16/2025 11:42:53 AM">
+      <Path ResultId="1052167" PathId="3" SimilarityId="-1097704947" SourceMethod="process_config_file" DestinationMethod="process_config_file">
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>9</Line>
+          <Column>36</Column>
+          <NodeId>1</NodeId>
+          <Name>f</Name>
+          <Type></Type>
+          <Length>1</Length>
+          <Snippet>
+            <Line>
+              <Number>9</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code># POTENTIALLY VULNERABLE: Depends on config file content
+    with open(config_path, 'r') as f:
+        config = json.load(f)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>10</Line>
+          <Column>28</Column>
+          <NodeId>2</NodeId>
+          <Name>f</Name>
+          <Type></Type>
+          <Length>1</Length>
+          <Snippet>
+            <Line>
+              <Number>10</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(config_path, 'r') as f:
+        config = json.load(f)
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>10</Line>
+          <Column>23</Column>
+          <NodeId>3</NodeId>
+          <Name>load</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>10</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(config_path, 'r') as f:
+        config = json.load(f)
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>10</Line>
+          <Column>9</Column>
+          <NodeId>4</NodeId>
+          <Name>config</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>10</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>with open(config_path, 'r') as f:
+        config = json.load(f)
+    
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>12</Line>
+          <Column>27</Column>
+          <NodeId>5</NodeId>
+          <Name>config</Name>
+          <Type></Type>
+          <Length>6</Length>
+          <Snippet>
+            <Line>
+              <Number>12</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    initialization_code = config.get('init_code', '')
+    exec(initialization_code)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>12</Line>
+          <Column>34</Column>
+          <NodeId>6</NodeId>
+          <Name>get</Name>
+          <Type></Type>
+          <Length>3</Length>
+          <Snippet>
+            <Line>
+              <Number>12</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    initialization_code = config.get('init_code', '')
+    exec(initialization_code)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>12</Line>
+          <Column>5</Column>
+          <NodeId>7</NodeId>
+          <Name>initialization_code</Name>
+          <Type></Type>
+          <Length>19</Length>
+          <Snippet>
+            <Line>
+              <Number>12</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>
+    initialization_code = config.get('init_code', '')
+    exec(initialization_code)
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>13</Line>
+          <Column>10</Column>
+          <NodeId>8</NodeId>
+          <Name>initialization_code</Name>
+          <Type></Type>
+          <Length>19</Length>
+          <Snippet>
+            <Line>
+              <Number>13</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>initialization_code = config.get('init_code', '')
+    exec(initialization_code)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+        <PathNode>
+          <FileName>main.py</FileName>
+          <Line>13</Line>
+          <Column>5</Column>
+          <NodeId>9</NodeId>
+          <Name>exec</Name>
+          <Type></Type>
+          <Length>4</Length>
+          <Snippet>
+            <Line>
+              <Number>13</Number>
+              <RelativeVulnerabilityLineIndex>2</RelativeVulnerabilityLineIndex>
+              <Code>initialization_code = config.get('init_code', '')
+    exec(initialization_code)
+
+</Code>
+            </Line>
+          </Snippet>
+        </PathNode>
+      </Path>
+    </Result>
+  </Query>
+</CxXMLResults>

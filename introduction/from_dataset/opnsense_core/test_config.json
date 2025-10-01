@@ -1,0 +1,29 @@
+{
+  "dataset": "opnsense/core",
+  "no_fix": [
+    [
+      "SEMGREP",
+      85,
+      "already a list"
+    ],
+    [
+      "SEMGREP",
+      123,
+      "unknown type and value"
+    ],
+    [
+      "SEMGREP",
+      124,
+      "unknown type and value"
+    ],
+    [
+      "SEMGREP",
+      125,
+      "unknown type and value"
+    ]
+  ],
+  "tests": [
+    
+    
+  ]
+}

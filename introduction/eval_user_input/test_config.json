@@ -1,0 +1,36 @@
+{
+  "tests": [
+    ["FORTIFY", 1],
+    ["SNYK", 2],
+    ["SEMGREP", 9],
+    ["SEMGREP", 10]
+  ],
+  "no_fix": [
+    ["FORTIFY", 0, "missing nodes"],
+    ["CHECKMARX", 0],
+    ["CHECKMARX", 1],
+    ["CHECKMARX_XML", 0],
+    ["CHECKMARX_XML", 1],
+    ["CODEQL", 2],
+    ["CODEQL", 3],
+    ["SONARQUBE", 0],
+    ["SONARQUBE", 1],
+    ["SNYK", 0],
+    ["SNYK", 1],
+    ["SEMGREP", 0],
+    ["SEMGREP", 1],
+    ["SEMGREP", 2],
+    ["SEMGREP", 3],
+    ["SEMGREP", 4],
+    ["SEMGREP", 5],
+    ["SEMGREP", 6],
+    ["SEMGREP", 7],
+    ["SEMGREP", 11],
+    ["SEMGREP", 12]
+    
+    
+  ],
+  "unfixable": [
+
+  ]
+}
